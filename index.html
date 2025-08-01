@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault - Earn H Currency</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        .game-card {
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+        }
+        
+        .currency-glow {
+            text-shadow: 0 0 10px #fbbf24, 0 0 20px #fbbf24, 0 0 30px #fbbf24;
+        }
+        
+        .game-active {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Theme styles */
+        .theme-dark-blue {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+        
+        .theme-purple {
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+        }
+        
+        .theme-green {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        }
+        
+        .rainbow-border {
+            border: 3px solid;
+            border-image: linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080) 1;
+            animation: rainbow-rotate 3s linear infinite;
+        }
+        
+        @keyframes rainbow-rotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+        
+        .gold-border {
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        
+        .booster-active {
+            animation: booster-glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes booster-glow {
+            from { box-shadow: 0 0 5px #fbbf24; }
+            to { box-shadow: 0 0 20px #fbbf24, 0 0 30px #fbbf24; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-mono">
+    <!-- Header -->
+    <header id="mainHeader" class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <!-- Custom GameVault Logo -->
+                        <svg width="48" height="48" viewBox="0 0 48 48" class="drop-shadow-lg">
+                            <!-- Vault Door Background -->
+                            <circle cx="24" cy="24" r="22" fill="url(#vaultGradient)" stroke="#1e40af" stroke-width="2"/>
+                            <!-- Vault Door Handle -->
+                            <circle cx="24" cy="24" r="16" fill="none" stroke="#fbbf24" stroke-width="2"/>
+                            <circle cx="24" cy="24" r="8" fill="#fbbf24"/>
+                            <!-- Game Controller Icon -->
+                            <path d="M16 20h16a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4z" 
+                                  fill="#3b82f6" stroke="#1e40af" stroke-width="1"/>
+                            <circle cx="19" cy="26" r="1.5" fill="#fbbf24"/>
+                            <circle cx="29" cy="26" r="1.5" fill="#fbbf24"/>
+                            <!-- H Currency Symbol -->
+                            <text x="24" y="18" text-anchor="middle" fill="#fbbf24" font-size="8" font-weight="bold" font-family="Orbitron">H</text>
+                            
+                            <defs>
+                                <linearGradient id="vaultGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#1f2937"/>
+                                    <stop offset="50%" style="stop-color:#374151"/>
+                                    <stop offset="100%" style="stop-color:#111827"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div id="avatarDisplay" class="absolute -top-1 -right-1 text-lg">🎮</div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-blue-400" style="font-family: 'Orbitron', monospace;">
+                            GameVault
+                        </h1>
+                        <div id="titleDisplay" class="text-xs sm:text-sm text-gray-400 font-normal"></div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div id="currencyContainer" class="bg-gray-700 px-4 py-2 rounded-lg border border-yellow-500">
+                        <span class="text-yellow-400 currency-glow font-bold text-xl">
+                            H: <span id="currency">0</span>
+                            <span id="multiplierDisplay" class="text-green-400 text-sm ml-2"></span>
+                        </span>
+                    </div>
+                    <div class="text-sm text-gray-300">
+                        Games Won: <span id="gamesWon" class="text-green-400 font-bold">0</span>
+                    </div>
+                    <div id="boosterStatus" class="text-xs text-yellow-400"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Game Categories -->
+    <nav class="bg-gray-800 border-b border-gray-700">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex space-x-4 overflow-x-auto">
+                <button onclick="filterGames('all')" class="category-btn bg-blue-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">All Games</button>
+                <button onclick="filterGames('puzzle')" class="category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">Puzzle</button>
+                <button onclick="filterGames('action')" class="category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">Action</button>
+                <button onclick="filterGames('strategy')" class="category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">Strategy</button>
+                <button onclick="filterGames('arcade')" class="category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">Arcade</button>
+                <button onclick="filterGames('memory')" class="category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">Memory</button>
+                <button onclick="filterGames('racing')" class="category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">Racing</button>
+                <button onclick="filterGames('sports')" class="category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">Sports</button>
+                <button onclick="openShop()" class="category-btn bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-lg whitespace-nowrap">🛒 Shop</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Stats Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                <h3 class="text-lg font-semibold text-blue-400 mb-2">Total Games</h3>
+                <p class="text-3xl font-bold" id="totalGames">4,200</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                <h3 class="text-lg font-semibold text-green-400 mb-2">H Earned Today</h3>
+                <p class="text-3xl font-bold text-yellow-400" id="dailyH">0</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                <h3 class="text-lg font-semibold text-purple-400 mb-2">Win Streak</h3>
+                <p class="text-3xl font-bold" id="winStreak">0</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                <h3 class="text-lg font-semibold text-red-400 mb-2">Rank</h3>
+                <p class="text-3xl font-bold" id="playerRank">Novice</p>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <input type="text" id="searchInput" placeholder="Search thousands of games..." 
+                   class="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none">
+        </div>
+
+        <!-- Games Grid -->
+        <div id="gamesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <!-- Games will be populated by JavaScript -->
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-12">
+            <button onclick="loadMoreGames()" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-lg font-semibold transition-colors">
+                Load More Games
+            </button>
+        </div>
+    </main>
+
+    <!-- Game Modal -->
+    <div id="gameModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="modalGameTitle" class="text-2xl font-bold text-blue-400"></h2>
+                    <button onclick="closeGameModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                <div id="gameArea" class="bg-gray-900 rounded-lg p-6 min-h-[300px] flex items-center justify-center">
+                    <!-- Game content will be loaded here -->
+                </div>
+                <div class="mt-4 flex justify-between items-center">
+                    <div class="text-sm text-gray-400">
+                        Reward: <span class="text-yellow-400 font-bold">+<span id="gameReward">10</span> H</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="instantWinBtn" onclick="useInstantWin()" 
+                                class="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded text-sm font-bold hidden">
+                            🎯 Instant Win
+                        </button>
+                        <div class="text-sm text-gray-400">
+                            Difficulty: <span id="gameDifficulty" class="font-bold">Easy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shop Modal -->
+    <div id="shopModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-yellow-400">🛒 H Currency Shop</h2>
+                    <button onclick="closeShop()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                
+                <!-- Shop Categories -->
+                <div class="flex space-x-4 mb-6 overflow-x-auto">
+                    <button onclick="showShopCategory('cosmetics')" class="shop-category-btn bg-purple-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">🎨 Cosmetics</button>
+                    <button onclick="showShopCategory('boosters')" class="shop-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">⚡ Boosters</button>
+                    <button onclick="showShopCategory('titles')" class="shop-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">🏆 Titles</button>
+                    <button onclick="showShopCategory('special')" class="shop-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">✨ Special</button>
+                </div>
+                
+                <!-- Shop Items -->
+                <div id="shopItems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Items will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game data and state
+        let currency = 0;
+        let gamesWon = 0;
+        let winStreak = 0;
+        let dailyH = 0;
+        let currentFilter = 'all';
+        let displayedGames = 0;
+        const gamesPerLoad = 50;
+        let currentShopCategory = 'cosmetics';
+        let ownedItems = JSON.parse(localStorage.getItem('ownedItems') || '[]');
+        let activeItems = JSON.parse(localStorage.getItem('activeItems') || '{}');
+        let activeBoosters = JSON.parse(localStorage.getItem('activeBoosters') || '{}');
+        let hMultiplier = 1;
+        let luckBoost = 0;
+        let streakProtection = false;
+        let instantWinTokens = 0;
+
+        // Shop items data
+        const shopItems = {
+            cosmetics: [
+                {id: 'theme_dark_blue', name: 'Dark Blue Theme', price: 150, icon: '🔵', description: 'Change your interface to a sleek dark blue theme'},
+                {id: 'theme_purple', name: 'Purple Galaxy Theme', price: 200, icon: '🟣', description: 'Transform your GameVault with a cosmic purple theme'},
+                {id: 'theme_green', name: 'Matrix Green Theme', price: 180, icon: '🟢', description: 'Enter the matrix with this retro green theme'},
+                {id: 'avatar_crown', name: 'Golden Crown Avatar', price: 300, icon: '👑', description: 'Show your royal status with a golden crown'},
+                {id: 'avatar_fire', name: 'Fire Avatar', price: 250, icon: '🔥', description: 'Burn bright with this fiery avatar effect'},
+                {id: 'avatar_star', name: 'Star Avatar', price: 220, icon: '⭐', description: 'Shine like a star with this celestial avatar'},
+                {id: 'border_gold', name: 'Gold Border', price: 400, icon: '🏆', description: 'Elegant gold border around your profile'},
+                {id: 'border_rainbow', name: 'Rainbow Border', price: 350, icon: '🌈', description: 'Colorful rainbow border that cycles through colors'}
+            ],
+            boosters: [
+                {id: 'double_h_1hr', name: '2x H Booster (1 Hour)', price: 100, icon: '⚡', description: 'Double your H earnings for 1 hour'},
+                {id: 'double_h_24hr', name: '2x H Booster (24 Hours)', price: 800, icon: '⚡', description: 'Double your H earnings for 24 hours'},
+                {id: 'triple_h_30min', name: '3x H Booster (30 Minutes)', price: 200, icon: '🚀', description: 'Triple your H earnings for 30 minutes'},
+                {id: 'luck_boost', name: 'Luck Booster', price: 150, icon: '🍀', description: 'Increase your chances of winning games by 20%'},
+                {id: 'streak_protect', name: 'Streak Protection', price: 250, icon: '🛡️', description: 'Protect your win streak from breaking once'},
+                {id: 'instant_win', name: 'Instant Win Token', price: 500, icon: '🎯', description: 'Instantly win any game (single use)'},
+                {id: 'energy_refill', name: 'Energy Refill', price: 50, icon: '🔋', description: 'Restore your energy to play more games'},
+                {id: 'mega_multiplier', name: 'Mega Multiplier (10 min)', price: 300, icon: '💎', description: '5x H earnings for 10 minutes'}
+            ],
+            titles: [
+                {id: 'title_legend', name: 'The Legend', price: 1000, icon: '🏆', description: 'Display "The Legend" as your title'},
+                {id: 'title_master', name: 'Game Master', price: 600, icon: '🎮', description: 'Show everyone you\'re a Game Master'},
+                {id: 'title_speedster', name: 'Speed Demon', price: 400, icon: '💨', description: 'For the fastest players in GameVault'},
+                {id: 'title_collector', name: 'H Collector', price: 350, icon: '💰', description: 'Perfect for currency collectors'},
+                {id: 'title_champion', name: 'Champion', price: 500, icon: '🥇', description: 'Wear the Champion title with pride'},
+                {id: 'title_wizard', name: 'Puzzle Wizard', price: 450, icon: '🧙', description: 'Master of all puzzle games'},
+                {id: 'title_ace', name: 'Gaming Ace', price: 550, icon: '🃏', description: 'The ultimate gaming ace title'},
+                {id: 'title_vip', name: 'VIP Player', price: 800, icon: '💎', description: 'Exclusive VIP status for elite players'}
+            ],
+            special: [
+                {id: 'custom_game', name: 'Custom Game Creator', price: 2000, icon: '🛠️', description: 'Create your own custom mini-game'},
+                {id: 'leaderboard_boost', name: 'Leaderboard Boost', price: 1500, icon: '📊', description: 'Appear higher on global leaderboards'},
+                {id: 'exclusive_games', name: 'VIP Game Access', price: 1200, icon: '🔐', description: 'Access to exclusive VIP-only games'},
+                {id: 'personal_stats', name: 'Advanced Statistics', price: 800, icon: '📈', description: 'Detailed analytics of your gaming performance'},
+                {id: 'friend_system', name: 'Friend System', price: 600, icon: '👥', description: 'Add friends and compete with them'},
+                {id: 'daily_bonus', name: 'Premium Daily Bonus', price: 1000, icon: '🎁', description: 'Receive 50 H every day automatically'},
+                {id: 'game_hints', name: 'Game Hints System', price: 400, icon: '💡', description: 'Get helpful hints in difficult games'},
+                {id: 'achievement_hunter', name: 'Achievement Hunter', price: 700, icon: '🏅', description: 'Unlock special achievements and rewards'}
+            ]
+        };
+
+        // Expanded game categories with unique game types
+        const gameCategories = ['puzzle', 'action', 'strategy', 'arcade', 'memory', 'racing', 'sports'];
+        const gameTemplates = {
+            puzzle: [
+                {name: 'Math Challenge', type: 'math', icon: '🧮'},
+                {name: 'Word Puzzle', type: 'word', icon: '📝'},
+                {name: 'Logic Grid', type: 'logic', icon: '🧩'},
+                {name: 'Number Sequence', type: 'sequence', icon: '🔢'},
+                {name: 'Pattern Match', type: 'pattern', icon: '🎯'},
+                {name: 'Brain Teaser', type: 'riddle', icon: '🤔'},
+                {name: 'Sudoku Mini', type: 'sudoku', icon: '📊'},
+                {name: 'Code Breaker', type: 'code', icon: '🔐'}
+            ],
+            action: [
+                {name: 'Target Practice', type: 'shooting', icon: '🎯'},
+                {name: 'Reflex Test', type: 'reflex', icon: '⚡'},
+                {name: 'Speed Click', type: 'clicking', icon: '👆'},
+                {name: 'Dodge Game', type: 'dodge', icon: '🏃'},
+                {name: 'Quick Draw', type: 'quickdraw', icon: '🔫'},
+                {name: 'Reaction Time', type: 'reaction', icon: '⏱️'},
+                {name: 'Precision Hit', type: 'precision', icon: '🎪'},
+                {name: 'Speed Run', type: 'speedrun', icon: '🏃‍♂️'}
+            ],
+            strategy: [
+                {name: 'Tic Tac Toe', type: 'tictactoe', icon: '⭕'},
+                {name: 'Chess Puzzle', type: 'chess', icon: '♟️'},
+                {name: 'Tower Defense', type: 'tower', icon: '🏰'},
+                {name: 'Connect Four', type: 'connect4', icon: '🔴'},
+                {name: 'Checkers', type: 'checkers', icon: '⚫'},
+                {name: 'Strategy War', type: 'war', icon: '⚔️'},
+                {name: 'Mind Game', type: 'mind', icon: '🧠'},
+                {name: 'Tactical Move', type: 'tactical', icon: '🎲'}
+            ],
+            arcade: [
+                {name: 'Star Catcher', type: 'catcher', icon: '⭐'},
+                {name: 'Snake Game', type: 'snake', icon: '🐍'},
+                {name: 'Breakout', type: 'breakout', icon: '🧱'},
+                {name: 'Space Invaders', type: 'invaders', icon: '👾'},
+                {name: 'Pac-Man Style', type: 'pacman', icon: '🟡'},
+                {name: 'Frogger', type: 'frogger', icon: '🐸'},
+                {name: 'Asteroids', type: 'asteroids', icon: '☄️'},
+                {name: 'Centipede', type: 'centipede', icon: '🐛'}
+            ],
+            memory: [
+                {name: 'Color Memory', type: 'colormemory', icon: '🌈'},
+                {name: 'Card Match', type: 'cardmatch', icon: '🃏'},
+                {name: 'Sequence Repeat', type: 'sequence', icon: '🔄'},
+                {name: 'Pattern Memory', type: 'pattern', icon: '🎨'},
+                {name: 'Number Memory', type: 'numbermemory', icon: '🔢'},
+                {name: 'Simon Says', type: 'simon', icon: '🎵'},
+                {name: 'Face Memory', type: 'faces', icon: '😊'},
+                {name: 'Location Memory', type: 'location', icon: '📍'}
+            ],
+            racing: [
+                {name: 'Speed Racer', type: 'racing', icon: '🏎️'},
+                {name: 'Bike Race', type: 'bike', icon: '🏍️'},
+                {name: 'Horse Racing', type: 'horse', icon: '🐎'},
+                {name: 'Boat Race', type: 'boat', icon: '🚤'},
+                {name: 'Running Track', type: 'running', icon: '🏃'},
+                {name: 'Ski Race', type: 'skiing', icon: '⛷️'},
+                {name: 'Plane Race', type: 'plane', icon: '✈️'},
+                {name: 'Rocket Race', type: 'rocket', icon: '🚀'}
+            ],
+            sports: [
+                {name: 'Basketball Shot', type: 'basketball', icon: '🏀'},
+                {name: 'Soccer Goal', type: 'soccer', icon: '⚽'},
+                {name: 'Tennis Match', type: 'tennis', icon: '🎾'},
+                {name: 'Golf Putt', type: 'golf', icon: '⛳'},
+                {name: 'Baseball Hit', type: 'baseball', icon: '⚾'},
+                {name: 'Bowling Strike', type: 'bowling', icon: '🎳'},
+                {name: 'Ping Pong', type: 'pingpong', icon: '🏓'},
+                {name: 'Darts Game', type: 'darts', icon: '🎯'}
+            ]
+        };
+
+        // Generate thousands of games with variety
+        function generateGames() {
+            const games = [];
+            let gameId = 1;
+            
+            // Generate games for each category
+            gameCategories.forEach(category => {
+                const templates = gameTemplates[category];
+                for (let i = 0; i < 600; i++) { // 600 games per category = 4200 total
+                    const template = templates[Math.floor(Math.random() * templates.length)];
+                    const variant = Math.floor(Math.random() * 100) + 1;
+                    games.push({
+                        id: gameId++,
+                        title: `${template.name} ${variant}`,
+                        category: category,
+                        gameType: template.type,
+                        icon: template.icon,
+                        difficulty: ['Easy', 'Medium', 'Hard'][Math.floor(Math.random() * 3)],
+                        reward: Math.floor(Math.random() * 50) + 10,
+                        plays: Math.floor(Math.random() * 10000),
+                        rating: (Math.random() * 2 + 3).toFixed(1)
+                    });
+                }
+            });
+            
+            return games.sort(() => Math.random() - 0.5); // Shuffle
+        }
+
+        const allGames = generateGames();
+
+        // Display games
+        function displayGames(games, append = false) {
+            const grid = document.getElementById('gamesGrid');
+            if (!append) {
+                grid.innerHTML = '';
+                displayedGames = 0;
+            }
+
+            const gamesToShow = games.slice(displayedGames, displayedGames + gamesPerLoad);
+            displayedGames += gamesToShow.length;
+
+            gamesToShow.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card p-4 rounded-lg border border-gray-700 cursor-pointer';
+                gameCard.innerHTML = `
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg mx-auto mb-3 flex items-center justify-center text-2xl">
+                            ${game.icon}
+                        </div>
+                        <h3 class="font-semibold text-sm mb-2 text-blue-300">${game.title}</h3>
+                        <div class="text-xs text-gray-400 mb-2">
+                            <span class="bg-gray-700 px-2 py-1 rounded">${game.category}</span>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 mb-2">
+                            <span>⭐ ${game.rating}</span>
+                            <span>🎯 ${game.plays}</span>
+                        </div>
+                        <div class="text-yellow-400 font-bold text-sm">+${game.reward} H</div>
+                    </div>
+                `;
+                gameCard.onclick = () => openGame(game);
+                grid.appendChild(gameCard);
+            });
+        }
+
+        // Filter games
+        function filterGames(category) {
+            currentFilter = category;
+            displayedGames = 0;
+            
+            // Update category buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.className = 'category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap';
+            });
+            event.target.className = 'category-btn bg-blue-600 text-white px-4 py-2 rounded-lg whitespace-nowrap';
+            
+            const filteredGames = category === 'all' ? allGames : allGames.filter(game => game.category === category);
+            displayGames(filteredGames);
+        }
+
+        // Search games
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredGames = allGames.filter(game => 
+                game.title.toLowerCase().includes(searchTerm) ||
+                game.category.toLowerCase().includes(searchTerm)
+            );
+            displayedGames = 0;
+            displayGames(filteredGames);
+        });
+
+        // Load more games
+        function loadMoreGames() {
+            const filteredGames = currentFilter === 'all' ? allGames : allGames.filter(game => game.category === currentFilter);
+            displayGames(filteredGames, true);
+        }
+
+        // Open game modal
+        function openGame(game) {
+            window.currentGame = game; // Store current game for instant win
+            
+            document.getElementById('modalGameTitle').textContent = game.title;
+            document.getElementById('gameReward').textContent = game.reward;
+            document.getElementById('gameDifficulty').textContent = game.difficulty;
+            
+            // Show instant win button if tokens available
+            const instantWinBtn = document.getElementById('instantWinBtn');
+            if (instantWinTokens > 0) {
+                instantWinBtn.classList.remove('hidden');
+            } else {
+                instantWinBtn.classList.add('hidden');
+            }
+            
+            // Create game content based on specific game type
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = createGameContent(game);
+            
+            document.getElementById('gameModal').classList.remove('hidden');
+        }
+        
+        function useInstantWin() {
+            if (instantWinTokens > 0 && window.currentGame) {
+                instantWinTokens--;
+                winGame(window.currentGame.reward);
+                updateBoosterStatus();
+                saveProgress();
+            }
+        }
+
+        // Close game modal
+        function closeGameModal() {
+            document.getElementById('gameModal').classList.add('hidden');
+        }
+
+        // Create game content based on game title keywords
+        function createGameContent(game) {
+            const title = game.title.toLowerCase();
+            
+            // Match by title keywords for proper game types
+            if (title.includes('dodge')) {
+                return createDodgeGame(game);
+            } else if (title.includes('snake')) {
+                return createSnakeGame(game);
+            } else if (title.includes('target') || title.includes('shooting')) {
+                return createShootingGame(game);
+            } else if (title.includes('speed click') || title.includes('click')) {
+                return createClickingGame(game);
+            } else if (title.includes('tic tac toe')) {
+                return createTicTacToeGame(game);
+            } else if (title.includes('math')) {
+                return createMathGame(game);
+            } else if (title.includes('word')) {
+                return createWordGame(game);
+            } else if (title.includes('basketball')) {
+                return createBasketballGame(game);
+            } else if (title.includes('racing') || title.includes('speed racer')) {
+                return createRacingGame(game);
+            } else if (title.includes('memory') || title.includes('simon')) {
+                return createMemoryGame(game);
+            } else if (title.includes('puzzle') || title.includes('logic')) {
+                return createPuzzleGame(game);
+            } else if (title.includes('reflex') || title.includes('reaction')) {
+                return createReflexGame(game);
+            } else if (title.includes('catcher') || title.includes('star')) {
+                return createCatcherGame(game);
+            } else if (title.includes('breakout') || title.includes('brick')) {
+                return createBreakoutGame(game);
+            } else if (title.includes('soccer') || title.includes('football')) {
+                return createSoccerGame(game);
+            } else if (title.includes('tennis')) {
+                return createTennisGame(game);
+            } else if (title.includes('golf')) {
+                return createGolfGame(game);
+            } else if (title.includes('bowling')) {
+                return createBowlingGame(game);
+            } else if (title.includes('darts')) {
+                return createDartsGame(game);
+            } else if (title.includes('chess')) {
+                return createChessGame(game);
+            } else if (title.includes('connect')) {
+                return createConnect4Game(game);
+            } else if (title.includes('tower')) {
+                return createTowerDefenseGame(game);
+            } else if (title.includes('invaders') || title.includes('space')) {
+                return createInvadersGame(game);
+            } else if (title.includes('pac') || title.includes('maze')) {
+                return createPacmanGame(game);
+            } else if (title.includes('frog')) {
+                return createFroggerGame(game);
+            } else if (title.includes('asteroid')) {
+                return createAsteroidsGame(game);
+            } else if (title.includes('bike') || title.includes('motorcycle')) {
+                return createBikeRaceGame(game);
+            } else if (title.includes('horse')) {
+                return createHorseRaceGame(game);
+            } else if (title.includes('boat')) {
+                return createBoatRaceGame(game);
+            } else if (title.includes('run') || title.includes('track')) {
+                return createRunningGame(game);
+            } else if (title.includes('ski')) {
+                return createSkiingGame(game);
+            } else if (title.includes('plane') || title.includes('flight')) {
+                return createPlaneRaceGame(game);
+            } else if (title.includes('rocket')) {
+                return createRocketRaceGame(game);
+            } else if (title.includes('baseball')) {
+                return createBaseballGame(game);
+            } else if (title.includes('ping pong') || title.includes('table tennis')) {
+                return createPingPongGame(game);
+            } else if (title.includes('card') || title.includes('match')) {
+                return createCardMatchGame(game);
+            } else if (title.includes('color')) {
+                return createColorMemoryGame(game);
+            } else if (title.includes('number')) {
+                return createNumberMemoryGame(game);
+            } else if (title.includes('pattern')) {
+                return createPatternGame(game);
+            } else if (title.includes('sequence')) {
+                return createSequenceGame(game);
+            } else if (title.includes('code') || title.includes('cipher')) {
+                return createCodeGame(game);
+            } else if (title.includes('sudoku')) {
+                return createSudokuGame(game);
+            } else if (title.includes('riddle') || title.includes('brain')) {
+                return createRiddleGame(game);
+            } else if (title.includes('quick') || title.includes('fast')) {
+                return createQuickDrawGame(game);
+            } else if (title.includes('precision') || title.includes('accuracy')) {
+                return createPrecisionGame(game);
+            } else if (title.includes('war') || title.includes('battle')) {
+                return createWarGame(game);
+            } else if (title.includes('mind') || title.includes('strategy')) {
+                return createMindGame(game);
+            } else if (title.includes('tactical')) {
+                return createTacticalGame(game);
+            } else if (title.includes('checker')) {
+                return createCheckersGame(game);
+            } else if (title.includes('centipede')) {
+                return createCentipedeGame(game);
+            } else if (title.includes('face')) {
+                return createFaceMemoryGame(game);
+            } else if (title.includes('location') || title.includes('place')) {
+                return createLocationMemoryGame(game);
+            } else {
+                // Default dice game for unmatched titles
+                return createDefaultGame(game);
+            }
+        }
+
+        // Sample implementations for different game types
+        function createMathGame(game) {
+            const problems = [
+                {q: "15 × 7 = ?", a: 105, opts: [105, 95, 115, 100]},
+                {q: "144 ÷ 12 = ?", a: 12, opts: [12, 14, 10, 16]},
+                {q: "√81 = ?", a: 9, opts: [9, 7, 11, 8]},
+                {q: "25% of 200 = ?", a: 50, opts: [50, 40, 60, 45]}
+            ];
+            
+            setTimeout(() => {
+                const problem = problems[Math.floor(Math.random() * problems.length)];
+                window.mathAnswer = problem.a;
+                
+                document.getElementById('mathQuestion').textContent = problem.q;
+                const buttons = document.querySelectorAll('.math-btn');
+                const shuffled = [...problem.opts].sort(() => Math.random() - 0.5);
+                
+                buttons.forEach((btn, i) => {
+                    btn.textContent = shuffled[i];
+                    btn.onclick = () => {
+                        if (shuffled[i] === window.mathAnswer) {
+                            winGame(game.reward);
+                        } else {
+                            btn.className = 'math-btn bg-red-600 px-4 py-2 rounded font-bold';
+                            setTimeout(() => {
+                                btn.className = 'math-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold';
+                            }, 1000);
+                        }
+                    };
+                });
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-2xl mb-6 text-yellow-400" id="mathQuestion">Loading...</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="math-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold"></button>
+                        <button class="math-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold"></button>
+                        <button class="math-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold"></button>
+                        <button class="math-btn bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold"></button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createWordGame(game) {
+            const words = ['PUZZLE', 'BRAIN', 'SMART', 'LOGIC', 'THINK'];
+            const word = words[Math.floor(Math.random() * words.length)];
+            const scrambled = word.split('').sort(() => Math.random() - 0.5).join('');
+            
+            setTimeout(() => {
+                window.checkWord = function() {
+                    const input = document.getElementById('wordInput').value.toUpperCase();
+                    if (input === word) {
+                        winGame(game.reward);
+                    } else {
+                        document.getElementById('wordResult').textContent = 'Try again!';
+                        document.getElementById('wordResult').className = 'text-red-400 mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">Unscramble the word:</h3>
+                    <div class="text-3xl font-bold text-yellow-400 mb-6">${scrambled}</div>
+                    <input type="text" id="wordInput" class="bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white mb-4" placeholder="Your answer">
+                    <br>
+                    <button onclick="checkWord()" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded font-bold">Submit</button>
+                    <div id="wordResult" class="mt-4"></div>
+                </div>
+            `;
+        }
+
+        function createBasketballGame(game) {
+            setTimeout(() => {
+                window.basketScore = 0;
+                window.basketShots = 0;
+                
+                window.shootBall = function() {
+                    window.basketShots++;
+                    const success = Math.random() < 0.6; // 60% success rate
+                    
+                    if (success) {
+                        window.basketScore++;
+                        document.getElementById('basketResult').innerHTML = '🏀 SCORE! 🎉';
+                        document.getElementById('basketResult').className = 'text-green-400 text-xl font-bold mt-4';
+                    } else {
+                        document.getElementById('basketResult').innerHTML = '😞 Missed!';
+                        document.getElementById('basketResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                    
+                    document.getElementById('basketStats').textContent = `${window.basketScore}/${window.basketShots}`;
+                    
+                    if (window.basketScore >= 3) {
+                        setTimeout(() => winGame(game.reward), 1000);
+                    } else if (window.basketShots >= 5 && window.basketScore < 3) {
+                        document.getElementById('basketResult').innerHTML = 'Game Over! Need 3/5 shots.';
+                        document.getElementById('basketResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🏀 Basketball Challenge</h3>
+                    <div class="text-6xl mb-6">🏀</div>
+                    <div class="mb-4">Score: <span id="basketStats" class="text-yellow-400 font-bold">0/0</span></div>
+                    <button onclick="shootBall()" class="bg-orange-600 hover:bg-orange-700 px-8 py-4 rounded-lg font-bold text-lg">SHOOT!</button>
+                    <div id="basketResult" class="mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">Make 3 out of 5 shots to win!</div>
+                </div>
+            `;
+        }
+
+        function createRacingGame(game) {
+            setTimeout(() => {
+                window.racePosition = 50;
+                window.raceSpeed = 0;
+                window.raceDistance = 0;
+                window.raceRunning = true;
+                
+                window.accelerate = function() {
+                    if (window.raceRunning) {
+                        window.raceSpeed = Math.min(window.raceSpeed + 2, 10);
+                    }
+                };
+                
+                window.brake = function() {
+                    if (window.raceRunning) {
+                        window.raceSpeed = Math.max(window.raceSpeed - 3, 0);
+                    }
+                };
+                
+                const raceInterval = setInterval(() => {
+                    if (!window.raceRunning) {
+                        clearInterval(raceInterval);
+                        return;
+                    }
+                    
+                    window.raceDistance += window.raceSpeed;
+                    document.getElementById('raceDistance').textContent = Math.floor(window.raceDistance);
+                    document.getElementById('raceSpeed').textContent = window.raceSpeed;
+                    
+                    const car = document.getElementById('raceCar');
+                    if (car) {
+                        car.style.left = (window.racePosition + Math.sin(Date.now() / 200) * 5) + '%';
+                    }
+                    
+                    if (window.raceDistance >= 100) {
+                        window.raceRunning = false;
+                        setTimeout(() => winGame(game.reward), 500);
+                    }
+                }, 100);
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🏎️ Speed Racing</h3>
+                    <div class="bg-gray-700 h-32 rounded-lg mb-4 relative overflow-hidden">
+                        <div id="raceCar" class="absolute bottom-4 text-3xl transition-all duration-100" style="left: 50%;">🏎️</div>
+                        <div class="absolute top-2 left-2 text-sm">Distance: <span id="raceDistance" class="text-yellow-400">0</span>/100</div>
+                        <div class="absolute top-2 right-2 text-sm">Speed: <span id="raceSpeed" class="text-green-400">0</span></div>
+                    </div>
+                    <div class="flex justify-center space-x-4">
+                        <button onmousedown="accelerate()" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded font-bold">🚀 GO!</button>
+                        <button onmousedown="brake()" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-bold">🛑 BRAKE</button>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-4">Reach 100 distance to win!</div>
+                </div>
+            `;
+        }
+
+        function createSnakeGame(game) {
+            setTimeout(() => {
+                window.snakeBody = [{x: 5, y: 5}];
+                window.snakeDirection = {x: 1, y: 0};
+                window.snakeFood = {x: 8, y: 8};
+                window.snakeScore = 0;
+                window.snakeRunning = true;
+                window.snakeGameLoop = null;
+                
+                window.drawSnake = function() {
+                    const board = document.getElementById('snakeBoard');
+                    if (!board) return;
+                    
+                    // Clear board
+                    for (let i = 0; i < 100; i++) {
+                        const cell = document.getElementById('snake-cell-' + i);
+                        if (cell) {
+                            cell.textContent = '';
+                            cell.className = 'w-6 h-6 border border-gray-600 bg-gray-800';
+                        }
+                    }
+                    
+                    // Draw snake
+                    window.snakeBody.forEach((segment, index) => {
+                        const cellIndex = segment.y * 10 + segment.x;
+                        const cell = document.getElementById('snake-cell-' + cellIndex);
+                        if (cell) {
+                            cell.textContent = index === 0 ? '🐍' : '🟢';
+                            cell.className = 'w-6 h-6 border border-gray-600 bg-green-600';
+                        }
+                    });
+                    
+                    // Draw food
+                    const foodIndex = window.snakeFood.y * 10 + window.snakeFood.x;
+                    const foodCell = document.getElementById('snake-cell-' + foodIndex);
+                    if (foodCell) {
+                        foodCell.textContent = '🍎';
+                        foodCell.className = 'w-6 h-6 border border-gray-600 bg-red-600';
+                    }
+                };
+                
+                window.moveSnakeGame = function() {
+                    if (!window.snakeRunning) return;
+                    
+                    const head = {...window.snakeBody[0]};
+                    head.x += window.snakeDirection.x;
+                    head.y += window.snakeDirection.y;
+                    
+                    // Check walls
+                    if (head.x < 0 || head.x >= 10 || head.y < 0 || head.y >= 10) {
+                        window.snakeRunning = false;
+                        document.getElementById('snakeResult').innerHTML = '<div class="text-red-400 font-bold">Hit wall! Game Over!</div>';
+                        return;
+                    }
+                    
+                    // Check self collision
+                    if (window.snakeBody.some(segment => segment.x === head.x && segment.y === head.y)) {
+                        window.snakeRunning = false;
+                        document.getElementById('snakeResult').innerHTML = '<div class="text-red-400 font-bold">Hit yourself! Game Over!</div>';
+                        return;
+                    }
+                    
+                    window.snakeBody.unshift(head);
+                    
+                    // Check food
+                    if (head.x === window.snakeFood.x && head.y === window.snakeFood.y) {
+                        window.snakeScore++;
+                        document.getElementById('snakeScore').textContent = window.snakeScore;
+                        
+                        // Generate new food
+                        do {
+                            window.snakeFood = {
+                                x: Math.floor(Math.random() * 10),
+                                y: Math.floor(Math.random() * 10)
+                            };
+                        } while (window.snakeBody.some(segment => 
+                            segment.x === window.snakeFood.x && segment.y === window.snakeFood.y
+                        ));
+                        
+                        if (window.snakeScore >= 5) {
+                            window.snakeRunning = false;
+                            setTimeout(() => winGame(game.reward), 500);
+                            return;
+                        }
+                    } else {
+                        window.snakeBody.pop();
+                    }
+                    
+                    window.drawSnake();
+                };
+                
+                window.changeDirection = function(newDir) {
+                    if (!window.snakeRunning) return;
+                    
+                    const directions = {
+                        up: {x: 0, y: -1},
+                        down: {x: 0, y: 1},
+                        left: {x: -1, y: 0},
+                        right: {x: 1, y: 0}
+                    };
+                    
+                    const dir = directions[newDir];
+                    // Prevent reversing
+                    if (dir.x !== -window.snakeDirection.x || dir.y !== -window.snakeDirection.y) {
+                        window.snakeDirection = dir;
+                    }
+                };
+                
+                // Start game loop
+                window.snakeGameLoop = setInterval(window.moveSnakeGame, 300);
+                window.drawSnake();
+                
+                // Keyboard controls
+                document.addEventListener('keydown', (e) => {
+                    if (!window.snakeRunning) return;
+                    switch(e.key) {
+                        case 'ArrowUp': window.changeDirection('up'); break;
+                        case 'ArrowDown': window.changeDirection('down'); break;
+                        case 'ArrowLeft': window.changeDirection('left'); break;
+                        case 'ArrowRight': window.changeDirection('right'); break;
+                    }
+                });
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🐍 Snake Game</h3>
+                    <div class="mb-4">Score: <span id="snakeScore" class="text-green-400 font-bold">0</span>/5</div>
+                    <div class="grid grid-cols-10 gap-0 mb-4 mx-auto max-w-60" id="snakeBoard">
+                        ${Array.from({length: 100}, (_, i) => `
+                            <div class="w-6 h-6 border border-gray-600 bg-gray-800" id="snake-cell-${i}"></div>
+                        `).join('')}
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 max-w-48 mx-auto mb-4">
+                        <div></div>
+                        <button onclick="changeDirection('up')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">⬆️</button>
+                        <div></div>
+                        <button onclick="changeDirection('left')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">⬅️</button>
+                        <div></div>
+                        <button onclick="changeDirection('right')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">➡️</button>
+                        <div></div>
+                        <button onclick="changeDirection('down')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">⬇️</button>
+                        <div></div>
+                    </div>
+                    <div id="snakeResult" class="text-sm text-gray-400">Eat 5 apples to win! Use arrow keys or buttons.</div>
+                </div>
+            `;
+        }
+
+        // Default simple game for any missing types
+        function createDefaultGame(game) {
+            setTimeout(() => {
+                window.rollDice = function() {
+                    const result = Math.floor(Math.random() * 6) + 1;
+                    document.getElementById('diceResult').textContent = 'You rolled: ' + result;
+                    
+                    if (result >= 4) {
+                        setTimeout(() => winGame(game.reward), 1000);
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🎲 Lucky Roll</h3>
+                    <div class="text-6xl mb-4">🎲</div>
+                    <button onclick="rollDice()" class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-bold">Roll Dice</button>
+                    <div id="diceResult" class="text-xl font-bold mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">Roll 4, 5, or 6 to win!</div>
+                </div>
+            `;
+        }
+
+        // Action games with proper gameplay
+        function createDodgeGame(game) {
+            setTimeout(() => {
+                window.dodgePlayerPos = 50;
+                window.dodgeObstacles = [];
+                window.dodgeScore = 0;
+                window.dodgeGameRunning = true;
+                window.dodgeSpeed = 2;
+                
+                window.movePlayerLeft = function() {
+                    if (window.dodgePlayerPos > 10) {
+                        window.dodgePlayerPos -= 10;
+                        document.getElementById('dodgePlayer').style.left = window.dodgePlayerPos + '%';
+                    }
+                };
+                
+                window.movePlayerRight = function() {
+                    if (window.dodgePlayerPos < 90) {
+                        window.dodgePlayerPos += 10;
+                        document.getElementById('dodgePlayer').style.left = window.dodgePlayerPos + '%';
+                    }
+                };
+                
+                window.createObstacle = function() {
+                    if (!window.dodgeGameRunning) return;
+                    
+                    const obstacle = document.createElement('div');
+                    obstacle.className = 'absolute w-8 h-8 bg-red-600 rounded text-center text-white font-bold';
+                    obstacle.textContent = '💥';
+                    obstacle.style.left = Math.random() * 80 + 10 + '%';
+                    obstacle.style.top = '0px';
+                    
+                    document.getElementById('dodgeArea').appendChild(obstacle);
+                    
+                    const fallInterval = setInterval(() => {
+                        const currentTop = parseInt(obstacle.style.top);
+                        obstacle.style.top = (currentTop + window.dodgeSpeed) + 'px';
+                        
+                        // Check collision
+                        const obstacleLeft = parseInt(obstacle.style.left);
+                        if (currentTop > 200 && currentTop < 240 && 
+                            Math.abs(obstacleLeft - window.dodgePlayerPos) < 8) {
+                            // Hit!
+                            window.dodgeGameRunning = false;
+                            document.getElementById('dodgeResult').innerHTML = '<div class="text-red-400 font-bold">Hit! Game Over!</div>';
+                            clearInterval(fallInterval);
+                            return;
+                        }
+                        
+                        // Remove if off screen
+                        if (currentTop > 280) {
+                            obstacle.remove();
+                            clearInterval(fallInterval);
+                            window.dodgeScore++;
+                            document.getElementById('dodgeScore').textContent = window.dodgeScore;
+                            
+                            if (window.dodgeScore >= 15) {
+                                window.dodgeGameRunning = false;
+                                setTimeout(() => winGame(game.reward), 500);
+                            }
+                        }
+                    }, 50);
+                };
+                
+                // Spawn obstacles
+                const spawnInterval = setInterval(() => {
+                    if (!window.dodgeGameRunning) {
+                        clearInterval(spawnInterval);
+                        return;
+                    }
+                    window.createObstacle();
+                    window.dodgeSpeed += 0.1; // Increase difficulty
+                }, 1000);
+                
+                // Keyboard controls
+                document.addEventListener('keydown', (e) => {
+                    if (!window.dodgeGameRunning) return;
+                    if (e.key === 'ArrowLeft' || e.key === 'a') window.movePlayerLeft();
+                    if (e.key === 'ArrowRight' || e.key === 'd') window.movePlayerRight();
+                });
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🏃 Dodge Game</h3>
+                    <div class="mb-4">Score: <span id="dodgeScore" class="text-green-400 font-bold">0</span>/15</div>
+                    <div class="relative bg-gray-700 h-64 rounded-lg mb-4 overflow-hidden" id="dodgeArea">
+                        <div id="dodgePlayer" class="absolute bottom-4 w-8 h-8 bg-blue-600 rounded text-center transition-all duration-200" 
+                             style="left: 50%; transform: translateX(-50%);">🏃</div>
+                    </div>
+                    <div class="flex justify-center space-x-4 mb-4">
+                        <button onclick="movePlayerLeft()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">← Left</button>
+                        <button onclick="movePlayerRight()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Right →</button>
+                    </div>
+                    <div id="dodgeResult" class="text-sm text-gray-400">Dodge the falling obstacles! Use arrow keys or buttons.</div>
+                </div>
+            `;
+        }
+        
+        function createShootingGame(game) {
+            setTimeout(() => {
+                window.shootTargets = [];
+                window.shootScore = 0;
+                window.shootAmmo = 10;
+                window.shootGameRunning = true;
+                
+                window.createTarget = function() {
+                    if (!window.shootGameRunning) return;
+                    
+                    const target = document.createElement('div');
+                    target.className = 'absolute w-12 h-12 bg-red-600 rounded-full cursor-pointer text-center text-white font-bold flex items-center justify-center';
+                    target.textContent = '🎯';
+                    target.style.left = Math.random() * 80 + 10 + '%';
+                    target.style.top = Math.random() * 60 + 10 + '%';
+                    
+                    target.onclick = function() {
+                        window.shootScore++;
+                        document.getElementById('shootScore').textContent = window.shootScore;
+                        target.remove();
+                        
+                        if (window.shootScore >= 8) {
+                            window.shootGameRunning = false;
+                            setTimeout(() => winGame(game.reward), 500);
+                        }
+                    };
+                    
+                    document.getElementById('shootArea').appendChild(target);
+                    
+                    // Remove target after 3 seconds
+                    setTimeout(() => {
+                        if (target.parentNode) target.remove();
+                    }, 3000);
+                };
+                
+                window.shoot = function() {
+                    if (window.shootAmmo <= 0 || !window.shootGameRunning) return;
+                    
+                    window.shootAmmo--;
+                    document.getElementById('shootAmmo').textContent = window.shootAmmo;
+                    
+                    if (window.shootAmmo <= 0 && window.shootScore < 8) {
+                        window.shootGameRunning = false;
+                        document.getElementById('shootResult').innerHTML = '<div class="text-red-400 font-bold">Out of ammo! Try again.</div>';
+                    }
+                };
+                
+                // Spawn targets
+                const targetInterval = setInterval(() => {
+                    if (!window.shootGameRunning) {
+                        clearInterval(targetInterval);
+                        return;
+                    }
+                    window.createTarget();
+                }, 1500);
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🎯 Target Practice</h3>
+                    <div class="flex justify-between mb-4">
+                        <div>Score: <span id="shootScore" class="text-green-400 font-bold">0</span>/8</div>
+                        <div>Ammo: <span id="shootAmmo" class="text-yellow-400 font-bold">10</span></div>
+                    </div>
+                    <div class="relative bg-gray-700 h-64 rounded-lg mb-4 overflow-hidden" id="shootArea">
+                    </div>
+                    <button onclick="shoot()" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-bold">🔫 SHOOT</button>
+                    <div id="shootResult" class="text-sm text-gray-400 mt-4">Click targets to shoot them! Hit 8 targets to win.</div>
+                </div>
+            `;
+        }
+        
+        function createClickingGame(game) {
+            setTimeout(() => {
+                window.clickCount = 0;
+                window.clickTimeLeft = 10;
+                window.clickGameRunning = true;
+                
+                window.fastClick = function() {
+                    if (!window.clickGameRunning) return;
+                    
+                    window.clickCount++;
+                    document.getElementById('clickCount').textContent = window.clickCount;
+                    
+                    // Visual feedback
+                    const btn = document.getElementById('clickBtn');
+                    btn.style.transform = 'scale(0.95)';
+                    setTimeout(() => btn.style.transform = 'scale(1)', 100);
+                    
+                    if (window.clickCount >= 50) {
+                        window.clickGameRunning = false;
+                        setTimeout(() => winGame(game.reward), 500);
+                    }
+                };
+                
+                // Timer
+                const timer = setInterval(() => {
+                    if (!window.clickGameRunning) {
+                        clearInterval(timer);
+                        return;
+                    }
+                    
+                    window.clickTimeLeft--;
+                    document.getElementById('clickTimer').textContent = window.clickTimeLeft;
+                    
+                    if (window.clickTimeLeft <= 0) {
+                        window.clickGameRunning = false;
+                        clearInterval(timer);
+                        if (window.clickCount >= 50) {
+                            setTimeout(() => winGame(game.reward), 500);
+                        } else {
+                            document.getElementById('clickResult').innerHTML = '<div class="text-red-400 font-bold">Not fast enough! Try again.</div>';
+                        }
+                    }
+                }, 1000);
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">👆 Speed Click</h3>
+                    <div class="flex justify-between mb-4">
+                        <div>Clicks: <span id="clickCount" class="text-green-400 font-bold">0</span>/50</div>
+                        <div>Time: <span id="clickTimer" class="text-red-400 font-bold">10</span>s</div>
+                    </div>
+                    <button id="clickBtn" onclick="fastClick()" 
+                            class="w-32 h-32 bg-blue-600 hover:bg-blue-700 rounded-full text-4xl font-bold transition-all duration-100">
+                        CLICK!
+                    </button>
+                    <div id="clickResult" class="text-sm text-gray-400 mt-4">Click 50 times in 10 seconds to win!</div>
+                </div>
+            `;
+        }
+        
+        // Additional game functions
+        function createMemoryGame(game) {
+            setTimeout(() => {
+                window.memorySequence = [];
+                window.memoryUserSequence = [];
+                window.memoryLevel = 1;
+                window.memoryShowingSequence = false;
+                
+                window.startMemoryGame = function() {
+                    window.memorySequence.push(Math.floor(Math.random() * 4));
+                    window.memoryUserSequence = [];
+                    window.showSequence();
+                };
+                
+                window.showSequence = function() {
+                    window.memoryShowingSequence = true;
+                    let index = 0;
+                    
+                    const showNext = () => {
+                        if (index < window.memorySequence.length) {
+                            const colorIndex = window.memorySequence[index];
+                            const btn = document.getElementById('memory-btn-' + colorIndex);
+                            btn.style.opacity = '1';
+                            btn.style.transform = 'scale(1.1)';
+                            
+                            setTimeout(() => {
+                                btn.style.opacity = '0.7';
+                                btn.style.transform = 'scale(1)';
+                                index++;
+                                setTimeout(showNext, 300);
+                            }, 500);
+                        } else {
+                            window.memoryShowingSequence = false;
+                            document.getElementById('memoryStatus').textContent = 'Your turn! Repeat the sequence.';
+                        }
+                    };
+                    
+                    document.getElementById('memoryStatus').textContent = 'Watch the sequence...';
+                    setTimeout(showNext, 500);
+                };
+                
+                window.memoryClick = function(colorIndex) {
+                    if (window.memoryShowingSequence) return;
+                    
+                    window.memoryUserSequence.push(colorIndex);
+                    
+                    // Check if correct so far
+                    const currentIndex = window.memoryUserSequence.length - 1;
+                    if (window.memoryUserSequence[currentIndex] !== window.memorySequence[currentIndex]) {
+                        document.getElementById('memoryStatus').textContent = 'Wrong! Try again.';
+                        setTimeout(() => {
+                            window.memoryUserSequence = [];
+                            window.showSequence();
+                        }, 1000);
+                        return;
+                    }
+                    
+                    // Check if sequence complete
+                    if (window.memoryUserSequence.length === window.memorySequence.length) {
+                        window.memoryLevel++;
+                        document.getElementById('memoryLevel').textContent = window.memoryLevel;
+                        
+                        if (window.memoryLevel > 5) {
+                            setTimeout(() => winGame(game.reward), 1000);
+                            return;
+                        }
+                        
+                        document.getElementById('memoryStatus').textContent = 'Correct! Next level...';
+                        setTimeout(() => window.startMemoryGame(), 1500);
+                    }
+                };
+                
+                window.startMemoryGame();
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🧠 Memory Game</h3>
+                    <div class="mb-4">Level: <span id="memoryLevel" class="text-yellow-400 font-bold">1</span>/5</div>
+                    <div class="grid grid-cols-2 gap-4 mb-4 max-w-48 mx-auto">
+                        <button onclick="memoryClick(0)" id="memory-btn-0" class="w-20 h-20 bg-red-600 rounded opacity-70 transition-all">🔴</button>
+                        <button onclick="memoryClick(1)" id="memory-btn-1" class="w-20 h-20 bg-blue-600 rounded opacity-70 transition-all">🔵</button>
+                        <button onclick="memoryClick(2)" id="memory-btn-2" class="w-20 h-20 bg-green-600 rounded opacity-70 transition-all">🟢</button>
+                        <button onclick="memoryClick(3)" id="memory-btn-3" class="w-20 h-20 bg-yellow-600 rounded opacity-70 transition-all">🟡</button>
+                    </div>
+                    <div id="memoryStatus" class="text-lg text-gray-400">Starting...</div>
+                </div>
+            `;
+        }
+        
+        function createPuzzleGame(game) {
+            setTimeout(() => {
+                const puzzles = [
+                    {q: "I have keys but no locks. I have space but no room. What am I?", a: "keyboard"},
+                    {q: "What gets wet while drying?", a: "towel"},
+                    {q: "What has hands but cannot clap?", a: "clock"},
+                    {q: "What can travel around the world while staying in a corner?", a: "stamp"}
+                ];
+                
+                const puzzle = puzzles[Math.floor(Math.random() * puzzles.length)];
+                window.puzzleAnswer = puzzle.a.toLowerCase();
+                
+                document.getElementById('puzzleQuestion').textContent = puzzle.q;
+                
+                window.checkPuzzle = function() {
+                    const answer = document.getElementById('puzzleInput').value.toLowerCase().trim();
+                    if (answer === window.puzzleAnswer) {
+                        winGame(game.reward);
+                    } else {
+                        document.getElementById('puzzleResult').textContent = 'Not quite right. Think again!';
+                        document.getElementById('puzzleResult').className = 'text-red-400 mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🧩 Logic Puzzle</h3>
+                    <div class="text-lg mb-6 p-4 bg-gray-700 rounded" id="puzzleQuestion">Loading...</div>
+                    <input type="text" id="puzzleInput" class="bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white mb-4" placeholder="Your answer">
+                    <br>
+                    <button onclick="checkPuzzle()" class="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded font-bold">Submit</button>
+                    <div id="puzzleResult" class="mt-4"></div>
+                </div>
+            `;
+        }
+        
+        function createReflexGame(game) {
+            setTimeout(() => {
+                window.reflexWaiting = false;
+                window.reflexStartTime = 0;
+                
+                window.startReflex = function() {
+                    document.getElementById('reflexBtn').textContent = 'Wait for GREEN...';
+                    document.getElementById('reflexBtn').className = 'w-32 h-32 bg-red-600 rounded-full text-white font-bold cursor-not-allowed';
+                    document.getElementById('reflexResult').textContent = '';
+                    
+                    const delay = Math.random() * 3000 + 1000; // 1-4 seconds
+                    
+                    setTimeout(() => {
+                        document.getElementById('reflexBtn').textContent = 'CLICK NOW!';
+                        document.getElementById('reflexBtn').className = 'w-32 h-32 bg-green-600 hover:bg-green-700 rounded-full text-white font-bold cursor-pointer';
+                        window.reflexWaiting = true;
+                        window.reflexStartTime = Date.now();
+                    }, delay);
+                };
+                
+                window.reflexClick = function() {
+                    if (!window.reflexWaiting) {
+                        document.getElementById('reflexResult').textContent = 'Too early! Wait for green.';
+                        document.getElementById('reflexResult').className = 'text-red-400 mt-4';
+                        return;
+                    }
+                    
+                    const reactionTime = Date.now() - window.reflexStartTime;
+                    document.getElementById('reflexResult').textContent = `Reaction time: ${reactionTime}ms`;
+                    
+                    if (reactionTime < 500) {
+                        document.getElementById('reflexResult').className = 'text-green-400 mt-4';
+                        setTimeout(() => winGame(game.reward), 1000);
+                    } else {
+                        document.getElementById('reflexResult').className = 'text-yellow-400 mt-4';
+                        document.getElementById('reflexBtn').textContent = 'Try Again';
+                        document.getElementById('reflexBtn').className = 'w-32 h-32 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-bold cursor-pointer';
+                        document.getElementById('reflexBtn').onclick = window.startReflex;
+                    }
+                    
+                    window.reflexWaiting = false;
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">⚡ Reflex Test</h3>
+                    <button id="reflexBtn" onclick="startReflex()" class="w-32 h-32 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-bold">Start Test</button>
+                    <div id="reflexResult" class="mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">React in under 500ms to win!</div>
+                </div>
+            `;
+        }
+        
+        // Placeholder functions for other game types (simplified for brevity)
+        function createLogicGame(game) { return createPuzzleGame(game); }
+        function createSequenceGame(game) { return createMemoryGame(game); }
+        function createPatternGame(game) { return createMemoryGame(game); }
+        function createRiddleGame(game) { return createPuzzleGame(game); }
+        function createSudokuGame(game) { return createPuzzleGame(game); }
+        function createCodeGame(game) { return createPuzzleGame(game); }
+        function createQuickDrawGame(game) { return createReflexGame(game); }
+        function createReactionGame(game) { return createReflexGame(game); }
+        function createPrecisionGame(game) { return createShootingGame(game); }
+        function createSpeedRunGame(game) { return createRacingGame(game); }
+        function createTicTacToeGame(game) {
+            setTimeout(() => {
+                window.ticBoard = Array(9).fill('');
+                window.ticGameOver = false;
+                window.ticCurrentPlayer = 'X';
+                
+                window.makeMove = function(index) {
+                    if (window.ticBoard[index] || window.ticGameOver) return;
+                    
+                    window.ticBoard[index] = 'X';
+                    const cell = document.getElementById('tic-cell-' + index);
+                    cell.textContent = 'X';
+                    cell.classList.add('text-blue-400', 'font-bold');
+                    
+                    if (window.checkWin('X')) {
+                        window.ticGameOver = true;
+                        setTimeout(() => winGame(game.reward), 1000);
+                        return;
+                    }
+                    
+                    if (window.ticBoard.every(cell => cell)) {
+                        window.ticGameOver = true;
+                        document.getElementById('ticResult').innerHTML = '<div class="text-yellow-400">Draw! Try again.</div>';
+                        return;
+                    }
+                    
+                    // AI move
+                    setTimeout(() => {
+                        const aiMove = window.getBestMove();
+                        if (aiMove !== -1) {
+                            window.ticBoard[aiMove] = 'O';
+                            const cell = document.getElementById('tic-cell-' + aiMove);
+                            cell.textContent = 'O';
+                            cell.classList.add('text-red-400', 'font-bold');
+                            
+                            if (window.checkWin('O')) {
+                                window.ticGameOver = true;
+                                document.getElementById('ticResult').innerHTML = '<div class="text-red-400">AI won! Try again.</div>';
+                            }
+                        }
+                    }, 500);
+                };
+                
+                window.getBestMove = function() {
+                    // Check if AI can win
+                    for (let i = 0; i < 9; i++) {
+                        if (window.ticBoard[i] === '') {
+                            window.ticBoard[i] = 'O';
+                            if (window.checkWin('O')) {
+                                window.ticBoard[i] = '';
+                                return i;
+                            }
+                            window.ticBoard[i] = '';
+                        }
+                    }
+                    
+                    // Check if AI needs to block
+                    for (let i = 0; i < 9; i++) {
+                        if (window.ticBoard[i] === '') {
+                            window.ticBoard[i] = 'X';
+                            if (window.checkWin('X')) {
+                                window.ticBoard[i] = '';
+                                return i;
+                            }
+                            window.ticBoard[i] = '';
+                        }
+                    }
+                    
+                    // Take center
+                    if (window.ticBoard[4] === '') return 4;
+                    
+                    // Take corner
+                    const corners = [0, 2, 6, 8];
+                    const availableCorners = corners.filter(i => window.ticBoard[i] === '');
+                    if (availableCorners.length > 0) {
+                        return availableCorners[Math.floor(Math.random() * availableCorners.length)];
+                    }
+                    
+                    // Take any space
+                    const emptyCells = window.ticBoard.map((cell, i) => cell === '' ? i : null).filter(i => i !== null);
+                    return emptyCells.length > 0 ? emptyCells[0] : -1;
+                };
+                
+                window.checkWin = function(player) {
+                    const winPatterns = [
+                        [0,1,2], [3,4,5], [6,7,8], // rows
+                        [0,3,6], [1,4,7], [2,5,8], // columns
+                        [0,4,8], [2,4,6] // diagonals
+                    ];
+                    
+                    return winPatterns.some(pattern => 
+                        pattern.every(index => window.ticBoard[index] === player)
+                    );
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">⭕ Tic Tac Toe</h3>
+                    <div class="grid grid-cols-3 gap-2 mb-4 max-w-48 mx-auto">
+                        ${Array.from({length: 9}, (_, i) => `
+                            <button onclick="makeMove(${i})" 
+                                    class="w-16 h-16 bg-gray-700 hover:bg-gray-600 rounded text-2xl font-bold transition-all" 
+                                    id="tic-cell-${i}"></button>
+                        `).join('')}
+                    </div>
+                    <div id="ticResult" class="text-lg text-gray-400">Beat the AI to win!</div>
+                </div>
+            `;
+        }
+        function createChessGame(game) { return createDefaultGame(game); }
+        function createTowerDefenseGame(game) { return createDefaultGame(game); }
+        function createConnect4Game(game) { return createDefaultGame(game); }
+        function createCheckersGame(game) { return createDefaultGame(game); }
+        function createWarGame(game) { return createDefaultGame(game); }
+        function createMindGame(game) { return createDefaultGame(game); }
+        function createTacticalGame(game) { return createDefaultGame(game); }
+        function createCatcherGame(game) { return createDefaultGame(game); }
+        function createBreakoutGame(game) { return createDefaultGame(game); }
+        function createInvadersGame(game) { return createDefaultGame(game); }
+        function createPacmanGame(game) { return createDefaultGame(game); }
+        function createFroggerGame(game) { return createDefaultGame(game); }
+        function createAsteroidsGame(game) { return createDefaultGame(game); }
+        function createCentipedeGame(game) { return createDefaultGame(game); }
+        function createColorMemoryGame(game) { return createDefaultGame(game); }
+        function createCardMatchGame(game) { return createDefaultGame(game); }
+        function createSimonGame(game) { return createDefaultGame(game); }
+        function createNumberMemoryGame(game) { return createDefaultGame(game); }
+        function createFaceMemoryGame(game) { return createDefaultGame(game); }
+        function createLocationMemoryGame(game) { return createDefaultGame(game); }
+        function createBikeRaceGame(game) { return createDefaultGame(game); }
+        function createHorseRaceGame(game) { return createDefaultGame(game); }
+        function createBoatRaceGame(game) { return createDefaultGame(game); }
+        function createRunningGame(game) { return createDefaultGame(game); }
+        function createSkiingGame(game) { return createDefaultGame(game); }
+        function createPlaneRaceGame(game) { return createDefaultGame(game); }
+        function createRocketRaceGame(game) { return createDefaultGame(game); }
+        function createSoccerGame(game) { return createDefaultGame(game); }
+        function createTennisGame(game) { return createDefaultGame(game); }
+        function createGolfGame(game) { return createDefaultGame(game); }
+        function createBaseballGame(game) { return createDefaultGame(game); }
+        function createBowlingGame(game) { return createDefaultGame(game); }
+        function createPingPongGame(game) { return createDefaultGame(game); }
+        function createDartsGame(game) { return createDefaultGame(game); }
+
+        // Win game function
+        function winGame(reward) {
+            // Apply luck boost to win chance (already won, but affects future games)
+            let actualReward = Math.floor(reward * hMultiplier);
+            
+            currency += actualReward;
+            gamesWon++;
+            winStreak++;
+            dailyH += actualReward;
+            
+            updateStats();
+            
+            // Show win animation
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="text-center">
+                    <div class="text-6xl mb-4 pulse-animation">🎉</div>
+                    <h3 class="text-2xl font-bold text-green-400 mb-2">You Won!</h3>
+                    <div class="text-yellow-400 font-bold text-xl mb-4">
+                        +${actualReward} H Earned!
+                        ${hMultiplier > 1 ? `<div class="text-green-400 text-sm">(${hMultiplier}x Multiplier Applied!)</div>` : ''}
+                    </div>
+                    <button onclick="closeGameModal()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold">Play Another Game</button>
+                </div>
+            `;
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('currency').textContent = currency;
+            document.getElementById('gamesWon').textContent = gamesWon;
+            document.getElementById('dailyH').textContent = dailyH;
+            document.getElementById('winStreak').textContent = winStreak;
+            
+            // Update multiplier display
+            if (hMultiplier > 1) {
+                document.getElementById('multiplierDisplay').textContent = `(${hMultiplier}x)`;
+                document.getElementById('currencyContainer').classList.add('booster-active');
+            } else {
+                document.getElementById('multiplierDisplay').textContent = '';
+                document.getElementById('currencyContainer').classList.remove('booster-active');
+            }
+            
+            // Update rank
+            let rank = 'Novice';
+            if (currency >= 10000) rank = 'Legend';
+            else if (currency >= 5000) rank = 'Master';
+            else if (currency >= 2000) rank = 'Expert';
+            else if (currency >= 500) rank = 'Pro';
+            else if (currency >= 100) rank = 'Amateur';
+            
+            document.getElementById('playerRank').textContent = rank;
+            
+            // Apply active cosmetics
+            applyActiveCosmetics();
+            
+            // Save progress whenever stats update
+            saveProgress();
+        }
+        
+        function applyActiveCosmetics() {
+            // Apply theme
+            const activeTheme = activeItems.cosmetics;
+            const header = document.getElementById('mainHeader');
+            const body = document.body;
+            
+            // Reset theme classes
+            header.classList.remove('theme-dark-blue', 'theme-purple', 'theme-green');
+            
+            if (activeTheme === 'theme_dark_blue') {
+                header.classList.add('theme-dark-blue');
+            } else if (activeTheme === 'theme_purple') {
+                header.classList.add('theme-purple');
+            } else if (activeTheme === 'theme_green') {
+                header.classList.add('theme-green');
+            }
+            
+            // Apply avatar
+            const avatarDisplay = document.getElementById('avatarDisplay');
+            if (activeItems.cosmetics === 'avatar_crown') {
+                avatarDisplay.textContent = '👑';
+            } else if (activeItems.cosmetics === 'avatar_fire') {
+                avatarDisplay.textContent = '🔥';
+            } else if (activeItems.cosmetics === 'avatar_star') {
+                avatarDisplay.textContent = '⭐';
+            } else {
+                avatarDisplay.textContent = '🎮';
+            }
+            
+            // Apply border
+            const currencyContainer = document.getElementById('currencyContainer');
+            currencyContainer.classList.remove('gold-border', 'rainbow-border');
+            
+            if (activeItems.cosmetics === 'border_gold') {
+                currencyContainer.classList.add('gold-border');
+            } else if (activeItems.cosmetics === 'border_rainbow') {
+                currencyContainer.classList.add('rainbow-border');
+            }
+            
+            // Apply title
+            const titleDisplay = document.getElementById('titleDisplay');
+            if (activeItems.titles) {
+                const titleMap = {
+                    'title_legend': 'The Legend',
+                    'title_master': 'Game Master',
+                    'title_speedster': 'Speed Demon',
+                    'title_collector': 'H Collector',
+                    'title_champion': 'Champion',
+                    'title_wizard': 'Puzzle Wizard',
+                    'title_ace': 'Gaming Ace',
+                    'title_vip': 'VIP Player'
+                };
+                titleDisplay.textContent = titleMap[activeItems.titles] || '';
+            } else {
+                titleDisplay.textContent = '';
+            }
+        }
+
+        // Shop functions
+        function openShop() {
+            document.getElementById('shopModal').classList.remove('hidden');
+            showShopCategory('cosmetics');
+        }
+
+        function closeShop() {
+            document.getElementById('shopModal').classList.add('hidden');
+        }
+
+        function showShopCategory(category) {
+            currentShopCategory = category;
+            
+            // Update category buttons
+            document.querySelectorAll('.shop-category-btn').forEach(btn => {
+                btn.className = 'shop-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap';
+            });
+            event.target.className = 'shop-category-btn bg-purple-600 text-white px-4 py-2 rounded-lg whitespace-nowrap';
+            
+            displayShopItems(category);
+        }
+
+        function displayShopItems(category) {
+            const shopItemsContainer = document.getElementById('shopItems');
+            const items = shopItems[category];
+            
+            shopItemsContainer.innerHTML = items.map(item => {
+                const isOwned = ownedItems.includes(item.id);
+                const isActive = activeItems[category] === item.id;
+                const canAfford = currency >= item.price;
+                
+                let buttonContent = '';
+                let buttonClass = '';
+                
+                if (isOwned) {
+                    if (category === 'boosters' || category === 'special') {
+                        buttonContent = isActive ? 'Active' : 'Use';
+                        buttonClass = isActive ? 'bg-green-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer';
+                    } else {
+                        buttonContent = isActive ? 'Equipped' : 'Equip';
+                        buttonClass = isActive ? 'bg-green-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer';
+                    }
+                } else {
+                    buttonContent = `Buy - ${item.price} H`;
+                    buttonClass = canAfford ? 'bg-yellow-600 hover:bg-yellow-700 cursor-pointer' : 'bg-gray-600 cursor-not-allowed';
+                }
+                
+                return `
+                    <div class="bg-gray-700 p-4 rounded-lg border border-gray-600">
+                        <div class="text-center mb-3">
+                            <div class="text-4xl mb-2">${item.icon}</div>
+                            <h3 class="font-bold text-lg text-blue-300 mb-1">${item.name}</h3>
+                            <p class="text-sm text-gray-400 mb-3">${item.description}</p>
+                            <div class="text-yellow-400 font-bold mb-3">${item.price} H</div>
+                        </div>
+                        <button onclick="handleShopPurchase('${item.id}', '${category}')" 
+                                class="${buttonClass} w-full px-4 py-2 rounded font-bold text-sm">
+                            ${buttonContent}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleShopPurchase(itemId, category) {
+            const item = shopItems[category].find(i => i.id === itemId);
+            const isOwned = ownedItems.includes(itemId);
+            
+            if (!isOwned) {
+                // Purchase item
+                if (currency >= item.price) {
+                    currency -= item.price;
+                    ownedItems.push(itemId);
+                    
+                    // Auto-equip cosmetics and titles
+                    if (category === 'cosmetics' || category === 'titles') {
+                        activeItems[category] = itemId;
+                    }
+                    
+                    saveProgress();
+                    updateStats();
+                    displayShopItems(category);
+                    
+                    // Show purchase success
+                    showNotification(`✅ Purchased ${item.name}!`, 'success');
+                } else {
+                    showNotification(`❌ Not enough H! Need ${item.price - currency} more.`, 'error');
+                }
+            } else {
+                // Use/Equip item
+                if (category === 'boosters') {
+                    activateBooster(itemId);
+                } else if (category === 'special') {
+                    activateSpecialItem(itemId);
+                } else {
+                    // Equip cosmetic/title
+                    activeItems[category] = itemId;
+                    saveProgress();
+                    displayShopItems(category);
+                    showNotification(`✨ Equipped ${item.name}!`, 'success');
+                }
+            }
+        }
+
+        function activateBooster(boosterId) {
+            const booster = shopItems.boosters.find(b => b.id === boosterId);
+            
+            // Remove from inventory (single use)
+            ownedItems = ownedItems.filter(id => id !== boosterId);
+            
+            // Apply booster effect
+            switch(boosterId) {
+                case 'double_h_1hr':
+                    applyMultiplier(2, 3600000); // 1 hour
+                    break;
+                case 'double_h_24hr':
+                    applyMultiplier(2, 86400000); // 24 hours
+                    break;
+                case 'triple_h_30min':
+                    applyMultiplier(3, 1800000); // 30 minutes
+                    break;
+                case 'mega_multiplier':
+                    applyMultiplier(5, 600000); // 10 minutes
+                    break;
+                case 'luck_boost':
+                    applyLuckBoost(20, 1800000); // 20% luck for 30 minutes
+                    break;
+                case 'streak_protect':
+                    streakProtection = true;
+                    showNotification('🛡️ Streak Protection activated! Your next loss won\'t break your streak.', 'success');
+                    break;
+                case 'instant_win':
+                    instantWinTokens++;
+                    showNotification('🎯 Instant Win Token added! Click the token button in any game to win instantly.', 'success');
+                    break;
+                case 'energy_refill':
+                    showNotification('🔋 Energy refilled! You feel refreshed and ready to play more games.', 'success');
+                    break;
+                default:
+                    showNotification(`⚡ ${booster.name} activated!`, 'success');
+            }
+            
+            saveProgress();
+            displayShopItems('boosters');
+            updateStats();
+        }
+
+        function activateSpecialItem(itemId) {
+            const item = shopItems.special.find(i => i.id === itemId);
+            showNotification(`✨ ${item.name} activated!`, 'success');
+            
+            // Special items could have various effects
+            // For demo purposes, we'll just show a notification
+        }
+
+        function applyMultiplier(multiplier, duration) {
+            hMultiplier = multiplier;
+            
+            // Store booster end time
+            const endTime = Date.now() + duration;
+            activeBoosters.multiplier = endTime;
+            
+            showNotification(`🚀 ${multiplier}x H multiplier active for ${Math.round(duration/60000)} minutes!`, 'success');
+            updateBoosterStatus();
+            
+            // Set timer to remove multiplier
+            setTimeout(() => {
+                if (activeBoosters.multiplier <= Date.now()) {
+                    hMultiplier = 1;
+                    delete activeBoosters.multiplier;
+                    showNotification('⏰ H multiplier expired.', 'info');
+                    updateBoosterStatus();
+                    updateStats();
+                    saveProgress();
+                }
+            }, duration);
+            
+            updateStats();
+            saveProgress();
+        }
+        
+        function applyLuckBoost(percentage, duration) {
+            luckBoost = percentage;
+            
+            const endTime = Date.now() + duration;
+            activeBoosters.luck = endTime;
+            
+            showNotification(`🍀 ${percentage}% luck boost active for ${Math.round(duration/60000)} minutes!`, 'success');
+            updateBoosterStatus();
+            
+            setTimeout(() => {
+                if (activeBoosters.luck <= Date.now()) {
+                    luckBoost = 0;
+                    delete activeBoosters.luck;
+                    showNotification('⏰ Luck boost expired.', 'info');
+                    updateBoosterStatus();
+                    saveProgress();
+                }
+            }, duration);
+            
+            saveProgress();
+        }
+        
+        function updateBoosterStatus() {
+            const statusElement = document.getElementById('boosterStatus');
+            let statusText = '';
+            
+            if (hMultiplier > 1) {
+                const timeLeft = Math.max(0, activeBoosters.multiplier - Date.now());
+                const minutesLeft = Math.ceil(timeLeft / 60000);
+                statusText += `🚀${hMultiplier}x (${minutesLeft}m) `;
+            }
+            
+            if (luckBoost > 0) {
+                const timeLeft = Math.max(0, activeBoosters.luck - Date.now());
+                const minutesLeft = Math.ceil(timeLeft / 60000);
+                statusText += `🍀+${luckBoost}% (${minutesLeft}m) `;
+            }
+            
+            if (streakProtection) {
+                statusText += '🛡️Protected ';
+            }
+            
+            if (instantWinTokens > 0) {
+                statusText += `🎯${instantWinTokens} tokens `;
+            }
+            
+            statusElement.textContent = statusText.trim();
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            let bgColor = 'bg-gray-600';
+            if (type === 'success') bgColor = 'bg-green-600';
+            else if (type === 'error') bgColor = 'bg-red-600';
+            else if (type === 'info') bgColor = 'bg-blue-600';
+            
+            notification.className = `fixed top-4 right-2 sm:right-4 z-50 p-3 sm:p-4 rounded-lg font-bold text-white ${bgColor} transform transition-all duration-300 translate-x-full text-sm sm:text-base max-w-xs sm:max-w-sm`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 10);
+            
+            // Animate out and remove
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        function saveProgress() {
+            localStorage.setItem('ownedItems', JSON.stringify(ownedItems));
+            localStorage.setItem('activeItems', JSON.stringify(activeItems));
+            localStorage.setItem('activeBoosters', JSON.stringify(activeBoosters));
+            localStorage.setItem('currency', currency.toString());
+            localStorage.setItem('gamesWon', gamesWon.toString());
+            localStorage.setItem('winStreak', winStreak.toString());
+            localStorage.setItem('dailyH', dailyH.toString());
+            localStorage.setItem('hMultiplier', hMultiplier.toString());
+            localStorage.setItem('luckBoost', luckBoost.toString());
+            localStorage.setItem('streakProtection', streakProtection.toString());
+            localStorage.setItem('instantWinTokens', instantWinTokens.toString());
+        }
+
+        function loadProgress() {
+            // Load all saved data with fallback defaults
+            currency = parseInt(localStorage.getItem('currency') || '0');
+            gamesWon = parseInt(localStorage.getItem('gamesWon') || '0');
+            winStreak = parseInt(localStorage.getItem('winStreak') || '0');
+            dailyH = parseInt(localStorage.getItem('dailyH') || '0');
+            hMultiplier = parseFloat(localStorage.getItem('hMultiplier') || '1');
+            luckBoost = parseInt(localStorage.getItem('luckBoost') || '0');
+            streakProtection = localStorage.getItem('streakProtection') === 'true';
+            instantWinTokens = parseInt(localStorage.getItem('instantWinTokens') || '0');
+            
+            // Load owned and active items
+            ownedItems = JSON.parse(localStorage.getItem('ownedItems') || '[]');
+            activeItems = JSON.parse(localStorage.getItem('activeItems') || '{}');
+            activeBoosters = JSON.parse(localStorage.getItem('activeBoosters') || '{}');
+            
+            // Restore active boosters and check if they're still valid
+            const now = Date.now();
+            
+            // Check multiplier booster
+            if (activeBoosters.multiplier && activeBoosters.multiplier > now) {
+                const timeLeft = activeBoosters.multiplier - now;
+                showNotification(`🚀 Welcome back! Your ${hMultiplier}x multiplier is still active!`, 'success');
+                setTimeout(() => {
+                    if (activeBoosters.multiplier <= Date.now()) {
+                        hMultiplier = 1;
+                        delete activeBoosters.multiplier;
+                        showNotification('⏰ H multiplier expired.', 'info');
+                        updateBoosterStatus();
+                        updateStats();
+                        saveProgress();
+                    }
+                }, timeLeft);
+            } else {
+                hMultiplier = 1;
+                delete activeBoosters.multiplier;
+            }
+            
+            // Check luck booster
+            if (activeBoosters.luck && activeBoosters.luck > now) {
+                const timeLeft = activeBoosters.luck - now;
+                showNotification(`🍀 Your luck boost is still active!`, 'success');
+                setTimeout(() => {
+                    if (activeBoosters.luck <= Date.now()) {
+                        luckBoost = 0;
+                        delete activeBoosters.luck;
+                        showNotification('⏰ Luck boost expired.', 'info');
+                        updateBoosterStatus();
+                        saveProgress();
+                    }
+                }, timeLeft);
+            } else {
+                luckBoost = 0;
+                delete activeBoosters.luck;
+            }
+            
+            // Welcome back message if returning player
+            if (currency > 0 || gamesWon > 0) {
+                setTimeout(() => {
+                    showNotification(`💰 Welcome back! You have ${currency} H currency saved!`, 'success');
+                }, 1000);
+            }
+        }
+
+        // Auto-save when leaving the page
+        window.addEventListener('beforeunload', function() {
+            saveProgress();
+        });
+        
+        // Auto-save periodically (every 30 seconds)
+        setInterval(saveProgress, 30000);
+        
+        // Initialize
+        loadProgress();
+        displayGames(allGames);
+        updateStats();
+        updateBoosterStatus();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96856df942252963',t:'MTc1NDA1MjI5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
