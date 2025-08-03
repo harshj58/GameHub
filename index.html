@@ -142,6 +142,8 @@
                 <button onclick="filterGames('racing')" class="category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">Racing</button>
                 <button onclick="filterGames('sports')" class="category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">Sports</button>
                 <button onclick="openShop()" class="category-btn bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-lg whitespace-nowrap">🛒 Shop</button>
+                <button onclick="openGamePortals()" class="category-btn bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg whitespace-nowrap">🌐 Game Portals</button>
+                <button onclick="openMultiplayer()" class="category-btn bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg whitespace-nowrap">👥 Multiplayer</button>
             </div>
         </div>
     </nav>
@@ -152,7 +154,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
                 <h3 class="text-lg font-semibold text-blue-400 mb-2">Total Games</h3>
-                <p class="text-3xl font-bold" id="totalGames">4,200</p>
+                <p class="text-3xl font-bold" id="totalGames">50+</p>
             </div>
             <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
                 <h3 class="text-lg font-semibold text-green-400 mb-2">H Earned Today</h3>
@@ -170,7 +172,7 @@
 
         <!-- Search Bar -->
         <div class="mb-8">
-            <input type="text" id="searchInput" placeholder="Search thousands of games..." 
+            <input type="text" id="searchInput" placeholder="Search games..." 
                    class="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none">
         </div>
 
@@ -216,6 +218,91 @@
         </div>
     </div>
 
+    <!-- Game Portals Modal -->
+    <div id="gamePortalsModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-purple-400">🌐 Game Portals & Websites</h2>
+                    <button onclick="closeGamePortals()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                
+                <div class="mb-6 p-4 bg-yellow-900 border border-yellow-600 rounded-lg">
+                    <div class="flex items-center mb-2">
+                        <span class="text-yellow-400 text-xl mr-2">⚠️</span>
+                        <h3 class="text-yellow-400 font-bold">External Links Notice</h3>
+                    </div>
+                    <p class="text-yellow-200 text-sm">These links will open external gaming websites. GameVault is not responsible for content on external sites. Play responsibly!</p>
+                </div>
+                
+                <!-- Portal Search -->
+                <div class="mb-6">
+                    <input type="text" id="portalSearchInput" placeholder="Search game portals..." 
+                           class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-purple-500 focus:outline-none">
+                </div>
+                
+                <!-- Portal Categories -->
+                <div class="flex space-x-4 mb-6 overflow-x-auto">
+                    <button onclick="showPortalCategory('popular')" class="portal-category-btn bg-purple-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">🔥 Popular</button>
+                    <button onclick="showPortalCategory('classic')" class="portal-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">🕹️ Classic</button>
+                    <button onclick="showPortalCategory('multiplayer')" class="portal-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">👥 Multiplayer</button>
+                    <button onclick="showPortalCategory('educational')" class="portal-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">📚 Educational</button>
+                    <button onclick="showPortalCategory('mobile')" class="portal-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">📱 Mobile</button>
+                    <button onclick="showPortalCategory('puzzle')" class="portal-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">🧩 Puzzle</button>
+                    <button onclick="showPortalCategory('action')" class="portal-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">⚡ Action</button>
+                    <button onclick="showPortalCategory('strategy')" class="portal-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">🧠 Strategy</button>
+                </div>
+                
+                <!-- Portal Sites -->
+                <div id="portalSites" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Sites will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multiplayer Modal -->
+    <div id="multiplayerModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-red-400">👥 Multiplayer Arena</h2>
+                    <button onclick="closeMultiplayer()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                
+                <!-- Player Status -->
+                <div class="bg-gray-700 p-4 rounded-lg mb-6">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-2xl">👤</div>
+                            <div>
+                                <div class="font-bold text-lg" id="playerName">Player_GameVault</div>
+                                <div class="text-sm text-gray-400">Online • Ready to play</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-yellow-400 font-bold">Rank: <span id="multiplayerRank">Bronze</span></div>
+                            <div class="text-green-400">Wins: <span id="multiplayerWins">0</span> | Losses: <span id="multiplayerLosses">0</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game Modes -->
+                <div class="flex space-x-4 mb-6 overflow-x-auto">
+                    <button onclick="showMultiplayerMode('quickmatch')" class="multiplayer-mode-btn bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">⚡ Quick Match</button>
+                    <button onclick="showMultiplayerMode('ranked')" class="multiplayer-mode-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">🏆 Ranked</button>
+                    <button onclick="showMultiplayerMode('custom')" class="multiplayer-mode-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">🎮 Custom Room</button>
+                    <button onclick="showMultiplayerMode('tournament')" class="multiplayer-mode-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap">🏅 Tournament</button>
+                </div>
+                
+                <!-- Multiplayer Content -->
+                <div id="multiplayerContent">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Shop Modal -->
     <div id="shopModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -242,6 +329,162 @@
     </div>
 
     <script>
+        // Game portals data - 40+ gaming websites
+        const gamePortals = {
+            popular: [
+                {name: 'Coolmath Games', url: 'https://www.coolmathgames.com', icon: '🧮', description: 'Fun math and logic games for all ages', rating: '4.8/5'},
+                {name: 'Miniclip', url: 'https://www.miniclip.com', icon: '🎮', description: 'Popular online games and mobile games', rating: '4.6/5'},
+                {name: 'Poki', url: 'https://poki.com', icon: '🎯', description: 'Free online games for kids and adults', rating: '4.7/5'},
+                {name: 'Kongregate', url: 'https://www.kongregate.com', icon: '👑', description: 'Indie games and browser-based gaming', rating: '4.5/5'},
+                {name: 'Armor Games', url: 'https://armorgames.com', icon: '⚔️', description: 'Strategy, RPG, and action games', rating: '4.4/5'},
+                {name: 'Newgrounds', url: 'https://www.newgrounds.com', icon: '🎨', description: 'Creative games and animations', rating: '4.3/5'},
+                {name: 'Y8 Games', url: 'https://www.y8.com', icon: '🎲', description: 'Thousands of free online games', rating: '4.2/5'},
+                {name: 'Friv', url: 'https://www.friv.com', icon: '🌟', description: 'Simple and fun games for everyone', rating: '4.1/5'},
+                {name: 'CrazyGames', url: 'https://www.crazygames.com', icon: '🤪', description: 'Crazy fun games for everyone', rating: '4.5/5'},
+                {name: 'AddictingGames', url: 'https://www.addictinggames.com', icon: '🎪', description: 'Addictive online games', rating: '4.3/5'}
+            ],
+            classic: [
+                {name: 'Internet Archive Games', url: 'https://archive.org/details/softwarelibrary_msdos_games', icon: '📼', description: 'Classic DOS and retro games', rating: '4.9/5'},
+                {name: 'My Abandonware', url: 'https://www.myabandonware.com', icon: '💾', description: 'Abandoned classic PC games', rating: '4.7/5'},
+                {name: 'ClassicReload', url: 'https://classicreload.com', icon: '🕹️', description: 'Play classic games in your browser', rating: '4.5/5'},
+                {name: 'Retro Games', url: 'https://www.retrogames.cc', icon: '👾', description: 'Nostalgic arcade and console games', rating: '4.4/5'},
+                {name: 'Play Classic Games', url: 'https://playclassic.games', icon: '🎮', description: 'Emulated classic console games', rating: '4.3/5'},
+                {name: 'Old Games Download', url: 'https://oldgamesdownload.com', icon: '⬇️', description: 'Download classic PC games', rating: '4.2/5'},
+                {name: 'Retro Arcade', url: 'https://www.retroarcade.com', icon: '🕹️', description: 'Classic arcade games online', rating: '4.4/5'},
+                {name: 'Vintage Games', url: 'https://vintagegames.com', icon: '📺', description: 'Vintage console and PC games', rating: '4.3/5'},
+                {name: 'Classic Gaming', url: 'https://classicgaming.cc', icon: '🎯', description: 'Retro gaming collection', rating: '4.2/5'},
+                {name: 'Emulator Online', url: 'https://emulatoronline.com', icon: '💻', description: 'Play retro games in browser', rating: '4.5/5'}
+            ],
+            multiplayer: [
+                {name: 'Agar.io', url: 'https://agar.io', icon: '🔴', description: 'Massively multiplayer cell game', rating: '4.6/5'},
+                {name: 'Slither.io', url: 'https://slither.io', icon: '🐍', description: 'Multiplayer snake game', rating: '4.5/5'},
+                {name: 'Krunker.io', url: 'https://krunker.io', icon: '🔫', description: 'Fast-paced multiplayer FPS', rating: '4.4/5'},
+                {name: 'Among Us Online', url: 'https://www.crazygames.com/game/among-us-online', icon: '👨‍🚀', description: 'Social deduction party game', rating: '4.8/5'},
+                {name: 'Shell Shockers', url: 'https://shellshock.io', icon: '🥚', description: 'Egg-based multiplayer shooter', rating: '4.3/5'},
+                {name: 'Skribbl.io', url: 'https://skribbl.io', icon: '✏️', description: 'Multiplayer drawing and guessing', rating: '4.7/5'},
+                {name: 'Diep.io', url: 'https://diep.io', icon: '🔵', description: 'Tank battle multiplayer game', rating: '4.2/5'},
+                {name: 'Wordle Together', url: 'https://wordletogether.com', icon: '📝', description: 'Multiplayer word puzzle game', rating: '4.5/5'},
+                {name: 'Surviv.io', url: 'https://surviv.io', icon: '🎯', description: '2D battle royale game', rating: '4.4/5'},
+                {name: 'Wings.io', url: 'https://wings.io', icon: '✈️', description: 'Multiplayer airplane combat', rating: '4.2/5'},
+                {name: 'Zombs.io', url: 'https://zombs.io', icon: '🧟', description: 'Zombie survival multiplayer', rating: '4.3/5'},
+                {name: 'Mope.io', url: 'https://mope.io', icon: '🐭', description: 'Animal evolution multiplayer', rating: '4.1/5'}
+            ],
+            educational: [
+                {name: 'Khan Academy Kids', url: 'https://www.khanacademy.org/kids', icon: '🎓', description: 'Educational games for children', rating: '4.9/5'},
+                {name: 'ABCya!', url: 'https://www.abcya.com', icon: '🔤', description: 'Educational games for K-5 students', rating: '4.8/5'},
+                {name: 'Prodigy Math', url: 'https://www.prodigygame.com', icon: '➕', description: 'Math learning through gaming', rating: '4.7/5'},
+                {name: 'Typing Club', url: 'https://www.typingclub.com', icon: '⌨️', description: 'Learn touch typing through games', rating: '4.6/5'},
+                {name: 'GeoGuessr', url: 'https://www.geoguessr.com', icon: '🌍', description: 'Geography guessing game', rating: '4.8/5'},
+                {name: 'Duolingo', url: 'https://www.duolingo.com', icon: '🦉', description: 'Language learning through games', rating: '4.7/5'},
+                {name: 'Code.org Games', url: 'https://code.org/learn', icon: '💻', description: 'Learn programming through games', rating: '4.5/5'},
+                {name: 'NASA Kids Games', url: 'https://www.nasa.gov/audience/forkids/kidsclub/flash/', icon: '🚀', description: 'Space and science educational games', rating: '4.4/5'},
+                {name: 'Scratch', url: 'https://scratch.mit.edu', icon: '🐱', description: 'Learn coding by creating games', rating: '4.6/5'},
+                {name: 'BrainPOP Games', url: 'https://www.brainpop.com/games/', icon: '🧠', description: 'Educational games on various topics', rating: '4.5/5'}
+            ],
+            mobile: [
+                {name: 'CrazyGames Mobile', url: 'https://www.crazygames.com/c/mobile', icon: '📱', description: 'Mobile-optimized browser games', rating: '4.6/5'},
+                {name: 'GameDistribution', url: 'https://gamedistribution.com', icon: '📲', description: 'HTML5 games for mobile devices', rating: '4.4/5'},
+                {name: 'Lagged Mobile', url: 'https://lagged.com/mobile', icon: '📱', description: 'Mobile games that work in browser', rating: '4.3/5'},
+                {name: 'GamePix', url: 'https://www.gamepix.com', icon: '🎮', description: 'Instant play mobile games', rating: '4.5/5'},
+                {name: 'Yandex Games', url: 'https://yandex.com/games', icon: '🎯', description: 'Mobile-friendly web games', rating: '4.2/5'},
+                {name: 'HTML5 Games', url: 'https://html5games.com', icon: '🌐', description: 'Cross-platform HTML5 games', rating: '4.1/5'},
+                {name: 'TouchArcade', url: 'https://toucharcade.com', icon: '📱', description: 'Mobile gaming news and reviews', rating: '4.3/5'},
+                {name: 'Pocket Gamer', url: 'https://www.pocketgamer.com', icon: '📲', description: 'Mobile gaming community', rating: '4.2/5'}
+            ],
+            puzzle: [
+                {name: 'Puzzle Palace', url: 'https://www.puzzlepalace.com', icon: '🧩', description: 'Mind-bending puzzle games', rating: '4.7/5'},
+                {name: 'Jigsaw Planet', url: 'https://www.jigsawplanet.com', icon: '🧩', description: 'Online jigsaw puzzles', rating: '4.6/5'},
+                {name: 'Sudoku.com', url: 'https://sudoku.com', icon: '🔢', description: 'Classic Sudoku puzzles', rating: '4.8/5'},
+                {name: 'Crossword Puzzle', url: 'https://crosswordpuzzles.com', icon: '📝', description: 'Daily crossword challenges', rating: '4.5/5'},
+                {name: 'Word Cookies', url: 'https://wordcookies.com', icon: '🍪', description: 'Word puzzle games', rating: '4.4/5'},
+                {name: 'Brain Teasers', url: 'https://brainteasers.com', icon: '🤔', description: 'Logic and brain puzzles', rating: '4.6/5'},
+                {name: 'Mahjong Games', url: 'https://mahjonggames.com', icon: '🀄', description: 'Traditional Mahjong puzzles', rating: '4.3/5'},
+                {name: 'Solitaire Paradise', url: 'https://www.solitaireparadise.com', icon: '🃏', description: 'Card puzzle games', rating: '4.5/5'}
+            ],
+            action: [
+                {name: 'Stick Fight', url: 'https://stickfight.com', icon: '🥊', description: 'Fast-paced stick figure combat', rating: '4.4/5'},
+                {name: 'Run 3', url: 'https://run3game.com', icon: '🏃', description: 'Endless running in space', rating: '4.6/5'},
+                {name: 'Happy Wheels', url: 'https://happywheels.com', icon: '🚲', description: 'Physics-based obstacle course', rating: '4.3/5'},
+                {name: 'Super Smash Flash', url: 'https://supersmashflash.com', icon: '👊', description: 'Fighting game with popular characters', rating: '4.5/5'},
+                {name: 'Bullet Force', url: 'https://bulletforce.com', icon: '🔫', description: '3D multiplayer shooter', rating: '4.4/5'},
+                {name: 'Zombs Royale', url: 'https://zombsroyale.io', icon: '👑', description: '2D battle royale game', rating: '4.3/5'},
+                {name: 'Vex Games', url: 'https://vexgames.com', icon: '🤸', description: 'Parkour platform games', rating: '4.2/5'},
+                {name: 'Stickman Hook', url: 'https://stickmanhook.com', icon: '🪝', description: 'Swinging stickman adventure', rating: '4.4/5'}
+            ],
+            strategy: [
+                {name: 'Chess.com', url: 'https://www.chess.com', icon: '♟️', description: 'Play chess online with millions', rating: '4.9/5'},
+                {name: 'Lichess', url: 'https://lichess.org', icon: '♛', description: 'Free online chess platform', rating: '4.8/5'},
+                {name: 'Age of War', url: 'https://ageofwar.com', icon: '⚔️', description: 'Epic strategy warfare game', rating: '4.5/5'},
+                {name: 'Bloons TD', url: 'https://bloonstd.com', icon: '🎈', description: 'Tower defense with balloons', rating: '4.6/5'},
+                {name: 'Kingdom Rush', url: 'https://kingdomrush.com', icon: '🏰', description: 'Fantasy tower defense', rating: '4.7/5'},
+                {name: 'Civilization Online', url: 'https://civilization.com', icon: '🏛️', description: 'Build and manage civilizations', rating: '4.4/5'},
+                {name: 'Risk Online', url: 'https://riskonline.com', icon: '🌍', description: 'World domination strategy', rating: '4.3/5'},
+                {name: 'Plants vs Zombies', url: 'https://plantsvszombies.com', icon: '🌱', description: 'Defend your garden from zombies', rating: '4.8/5'}
+            ]
+        };
+        
+        // All portals combined for search
+        let allPortals = [];
+        Object.keys(gamePortals).forEach(category => {
+            gamePortals[category].forEach(portal => {
+                allPortals.push({...portal, category});
+            });
+        });
+        
+        let filteredPortals = [...allPortals];
+        let currentPortalCategory = 'popular';
+
+        // Multiplayer games data (20 games)
+        const multiplayerGames = [
+            {id: 'mp_tic_tac_toe', name: 'Tic Tac Toe', icon: '⭕', category: 'strategy', players: 2, duration: '2-5 min'},
+            {id: 'mp_connect_four', name: 'Connect Four', icon: '🔴', category: 'strategy', players: 2, duration: '3-8 min'},
+            {id: 'mp_rock_paper_scissors', name: 'Rock Paper Scissors', icon: '✂️', category: 'quick', players: 2, duration: '1-2 min'},
+            {id: 'mp_word_battle', name: 'Word Battle', icon: '📝', category: 'puzzle', players: 2, duration: '5-10 min'},
+            {id: 'mp_math_duel', name: 'Math Duel', icon: '🧮', category: 'puzzle', players: 2, duration: '3-7 min'},
+            {id: 'mp_memory_match', name: 'Memory Match', icon: '🧠', category: 'memory', players: 2, duration: '4-8 min'},
+            {id: 'mp_speed_typing', name: 'Speed Typing', icon: '⌨️', category: 'skill', players: '2-4', duration: '2-5 min'},
+            {id: 'mp_trivia_clash', name: 'Trivia Clash', icon: '❓', category: 'knowledge', players: '2-8', duration: '5-15 min'},
+            {id: 'mp_reaction_race', name: 'Reaction Race', icon: '⚡', category: 'reflex', players: '2-6', duration: '1-3 min'},
+            {id: 'mp_drawing_guess', name: 'Drawing & Guess', icon: '🎨', category: 'creative', players: '3-8', duration: '10-20 min'},
+            {id: 'mp_number_war', name: 'Number War', icon: '🔢', category: 'strategy', players: 2, duration: '3-6 min'},
+            {id: 'mp_color_clash', name: 'Color Clash', icon: '🌈', category: 'reflex', players: '2-4', duration: '2-4 min'},
+            {id: 'mp_pattern_race', name: 'Pattern Race', icon: '🎯', category: 'memory', players: '2-6', duration: '3-7 min'},
+            {id: 'mp_word_chain', name: 'Word Chain', icon: '🔗', category: 'puzzle', players: '2-6', duration: '5-12 min'},
+            {id: 'mp_quick_draw', name: 'Quick Draw', icon: '🔫', category: 'reflex', players: 2, duration: '1-2 min'},
+            {id: 'mp_chess_blitz', name: 'Chess Blitz', icon: '♟️', category: 'strategy', players: 2, duration: '5-15 min'},
+            {id: 'mp_emoji_guess', name: 'Emoji Guess', icon: '😊', category: 'puzzle', players: '2-8', duration: '3-8 min'},
+            {id: 'mp_rhythm_battle', name: 'Rhythm Battle', icon: '🎵', category: 'music', players: '2-4', duration: '3-6 min'},
+            {id: 'mp_logic_duel', name: 'Logic Duel', icon: '🧩', category: 'puzzle', players: 2, duration: '4-10 min'},
+            {id: 'mp_speed_click', name: 'Speed Click Battle', icon: '👆', category: 'reflex', players: '2-8', duration: '1-3 min'}
+        ];
+
+        // Multiplayer state
+        let multiplayerStats = {
+            wins: parseInt(localStorage.getItem('multiplayerWins') || '0'),
+            losses: parseInt(localStorage.getItem('multiplayerLosses') || '0'),
+            rank: localStorage.getItem('multiplayerRank') || 'Bronze',
+            currentMode: 'quickmatch'
+        };
+
+        // Simulated online players
+        const onlinePlayers = [
+            {name: 'SpeedGamer42', rank: 'Gold', status: 'In Game', avatar: '🎮'},
+            {name: 'PuzzleMaster', rank: 'Platinum', status: 'Online', avatar: '🧩'},
+            {name: 'QuickReflexes', rank: 'Silver', status: 'Online', avatar: '⚡'},
+            {name: 'WordWizard', rank: 'Gold', status: 'Waiting', avatar: '📝'},
+            {name: 'MathGenius', rank: 'Diamond', status: 'In Game', avatar: '🧮'},
+            {name: 'MemoryKing', rank: 'Bronze', status: 'Online', avatar: '🧠'},
+            {name: 'StrategyPro', rank: 'Platinum', status: 'Online', avatar: '♟️'},
+            {name: 'ColorMaster', rank: 'Silver', status: 'Waiting', avatar: '🌈'},
+            {name: 'ReactionTime', rank: 'Gold', status: 'Online', avatar: '⚡'},
+            {name: 'ArtistGamer', rank: 'Silver', status: 'In Game', avatar: '🎨'},
+            {name: 'NumberCruncher', rank: 'Bronze', status: 'Online', avatar: '🔢'},
+            {name: 'PatternSeeker', rank: 'Gold', status: 'Online', avatar: '🎯'},
+            {name: 'TypingSpeed', rank: 'Silver', status: 'Waiting', avatar: '⌨️'},
+            {name: 'TriviaChamp', rank: 'Platinum', status: 'Online', avatar: '❓'},
+            {name: 'EmojiExpert', rank: 'Bronze', status: 'Online', avatar: '😊'}
+        ];
+
         // Game data and state
         let currency = 0;
         let gamesWon = 0;
@@ -386,9 +629,9 @@
             // Generate games for each category
             gameCategories.forEach(category => {
                 const templates = gameTemplates[category];
-                for (let i = 0; i < 600; i++) { // 600 games per category = 4200 total
+                for (let i = 0; i < 8; i++) { // 8 games per category = 56 total
                     const template = templates[Math.floor(Math.random() * templates.length)];
-                    const variant = Math.floor(Math.random() * 100) + 1;
+                    const variant = Math.floor(Math.random() * 10) + 1;
                     games.push({
                         id: gameId++,
                         title: `${template.name} ${variant}`,
@@ -397,7 +640,7 @@
                         icon: template.icon,
                         difficulty: ['Easy', 'Medium', 'Hard'][Math.floor(Math.random() * 3)],
                         reward: Math.floor(Math.random() * 50) + 10,
-                        plays: Math.floor(Math.random() * 10000),
+                        plays: Math.floor(Math.random() * 1000),
                         rating: (Math.random() * 2 + 3).toFixed(1)
                     });
                 }
@@ -1386,6 +1629,325 @@
             `;
         }
         
+        // Additional complete game implementations
+        function createSoccerGame(game) {
+            setTimeout(() => {
+                window.soccerScore = 0;
+                window.soccerShots = 0;
+                window.soccerGoalPosition = 50;
+                
+                window.kickBall = function() {
+                    window.soccerShots++;
+                    const accuracy = Math.random() * 100;
+                    const success = accuracy > 40; // 60% success rate
+                    
+                    if (success) {
+                        window.soccerScore++;
+                        document.getElementById('soccerResult').innerHTML = '⚽ GOAL! 🎉';
+                        document.getElementById('soccerResult').className = 'text-green-400 text-xl font-bold mt-4';
+                    } else {
+                        document.getElementById('soccerResult').innerHTML = '😞 Missed the goal!';
+                        document.getElementById('soccerResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                    
+                    document.getElementById('soccerStats').textContent = `${window.soccerScore}/${window.soccerShots}`;
+                    
+                    if (window.soccerScore >= 3) {
+                        setTimeout(() => winGame(game.reward), 1000);
+                    } else if (window.soccerShots >= 5 && window.soccerScore < 3) {
+                        document.getElementById('soccerResult').innerHTML = 'Game Over! Need 3/5 goals.';
+                        document.getElementById('soccerResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">⚽ Soccer Challenge</h3>
+                    <div class="text-6xl mb-6">⚽</div>
+                    <div class="mb-4">Goals: <span id="soccerStats" class="text-yellow-400 font-bold">0/0</span></div>
+                    <button onclick="kickBall()" class="bg-green-600 hover:bg-green-700 px-8 py-4 rounded-lg font-bold text-lg">KICK!</button>
+                    <div id="soccerResult" class="mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">Score 3 out of 5 goals to win!</div>
+                </div>
+            `;
+        }
+
+        function createTennisGame(game) {
+            setTimeout(() => {
+                window.tennisScore = 0;
+                window.tennisHits = 0;
+                
+                window.hitBall = function() {
+                    window.tennisHits++;
+                    const timing = Math.random();
+                    const success = timing > 0.3; // 70% success rate
+                    
+                    if (success) {
+                        window.tennisScore++;
+                        document.getElementById('tennisResult').innerHTML = '🎾 Perfect hit!';
+                        document.getElementById('tennisResult').className = 'text-green-400 text-xl font-bold mt-4';
+                    } else {
+                        document.getElementById('tennisResult').innerHTML = '😞 Missed!';
+                        document.getElementById('tennisResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                    
+                    document.getElementById('tennisStats').textContent = `${window.tennisScore}/${window.tennisHits}`;
+                    
+                    if (window.tennisScore >= 7) {
+                        setTimeout(() => winGame(game.reward), 1000);
+                    } else if (window.tennisHits >= 10 && window.tennisScore < 7) {
+                        document.getElementById('tennisResult').innerHTML = 'Game Over! Need 7/10 hits.';
+                        document.getElementById('tennisResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🎾 Tennis Match</h3>
+                    <div class="text-6xl mb-6">🎾</div>
+                    <div class="mb-4">Hits: <span id="tennisStats" class="text-yellow-400 font-bold">0/0</span></div>
+                    <button onclick="hitBall()" class="bg-yellow-600 hover:bg-yellow-700 px-8 py-4 rounded-lg font-bold text-lg">HIT!</button>
+                    <div id="tennisResult" class="mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">Hit 7 out of 10 balls to win!</div>
+                </div>
+            `;
+        }
+
+        function createGolfGame(game) {
+            setTimeout(() => {
+                window.golfStrokes = 0;
+                window.golfHoleDistance = 100;
+                window.golfBallPosition = 0;
+                
+                window.swingClub = function() {
+                    window.golfStrokes++;
+                    const power = Math.random() * 40 + 10; // 10-50 power
+                    window.golfBallPosition += power;
+                    
+                    document.getElementById('golfStrokes').textContent = window.golfStrokes;
+                    document.getElementById('golfDistance').textContent = Math.floor(window.golfBallPosition);
+                    
+                    if (window.golfBallPosition >= window.golfHoleDistance) {
+                        if (window.golfStrokes <= 4) {
+                            document.getElementById('golfResult').innerHTML = '⛳ Hole in ' + window.golfStrokes + '! Great job!';
+                            document.getElementById('golfResult').className = 'text-green-400 text-xl font-bold mt-4';
+                            setTimeout(() => winGame(game.reward), 1000);
+                        } else {
+                            document.getElementById('golfResult').innerHTML = 'Too many strokes! Try again.';
+                            document.getElementById('golfResult').className = 'text-red-400 text-xl font-bold mt-4';
+                        }
+                    } else if (window.golfStrokes >= 6) {
+                        document.getElementById('golfResult').innerHTML = 'Too many strokes! Game over.';
+                        document.getElementById('golfResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">⛳ Golf Challenge</h3>
+                    <div class="text-6xl mb-6">⛳</div>
+                    <div class="mb-4">
+                        <div>Strokes: <span id="golfStrokes" class="text-yellow-400 font-bold">0</span></div>
+                        <div>Distance: <span id="golfDistance" class="text-green-400 font-bold">0</span>/100</div>
+                    </div>
+                    <button onclick="swingClub()" class="bg-green-600 hover:bg-green-700 px-8 py-4 rounded-lg font-bold text-lg">SWING!</button>
+                    <div id="golfResult" class="mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">Reach the hole in 4 strokes or less!</div>
+                </div>
+            `;
+        }
+
+        function createBowlingGame(game) {
+            setTimeout(() => {
+                window.bowlingScore = 0;
+                window.bowlingRolls = 0;
+                
+                window.rollBall = function() {
+                    window.bowlingRolls++;
+                    const pins = Math.floor(Math.random() * 11); // 0-10 pins
+                    window.bowlingScore += pins;
+                    
+                    let result = '';
+                    if (pins === 10) {
+                        result = '🎳 STRIKE! All pins down!';
+                        document.getElementById('bowlingResult').className = 'text-green-400 text-xl font-bold mt-4';
+                    } else if (pins >= 7) {
+                        result = `🎳 Great roll! ${pins} pins down!`;
+                        document.getElementById('bowlingResult').className = 'text-yellow-400 text-xl font-bold mt-4';
+                    } else {
+                        result = `🎳 ${pins} pins down.`;
+                        document.getElementById('bowlingResult').className = 'text-gray-400 text-xl font-bold mt-4';
+                    }
+                    
+                    document.getElementById('bowlingResult').innerHTML = result;
+                    document.getElementById('bowlingStats').textContent = `${window.bowlingScore} (${window.bowlingRolls} rolls)`;
+                    
+                    if (window.bowlingScore >= 50) {
+                        setTimeout(() => winGame(game.reward), 1000);
+                    } else if (window.bowlingRolls >= 8 && window.bowlingScore < 50) {
+                        document.getElementById('bowlingResult').innerHTML = 'Game Over! Need 50+ points.';
+                        document.getElementById('bowlingResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🎳 Bowling Strike</h3>
+                    <div class="text-6xl mb-6">🎳</div>
+                    <div class="mb-4">Score: <span id="bowlingStats" class="text-yellow-400 font-bold">0 (0 rolls)</span></div>
+                    <button onclick="rollBall()" class="bg-purple-600 hover:bg-purple-700 px-8 py-4 rounded-lg font-bold text-lg">ROLL!</button>
+                    <div id="bowlingResult" class="mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">Score 50+ points in 8 rolls to win!</div>
+                </div>
+            `;
+        }
+
+        function createDartsGame(game) {
+            setTimeout(() => {
+                window.dartsScore = 0;
+                window.dartsThrows = 0;
+                
+                window.throwDart = function() {
+                    window.dartsThrows++;
+                    const hit = Math.random() * 50 + 1; // 1-50 points
+                    const points = Math.floor(hit);
+                    window.dartsScore += points;
+                    
+                    let result = '';
+                    if (points >= 40) {
+                        result = '🎯 BULLSEYE! ' + points + ' points!';
+                        document.getElementById('dartsResult').className = 'text-green-400 text-xl font-bold mt-4';
+                    } else if (points >= 25) {
+                        result = '🎯 Great throw! ' + points + ' points!';
+                        document.getElementById('dartsResult').className = 'text-yellow-400 text-xl font-bold mt-4';
+                    } else {
+                        result = '🎯 ' + points + ' points.';
+                        document.getElementById('dartsResult').className = 'text-gray-400 text-xl font-bold mt-4';
+                    }
+                    
+                    document.getElementById('dartsResult').innerHTML = result;
+                    document.getElementById('dartsStats').textContent = `${window.dartsScore} (${window.dartsThrows} throws)`;
+                    
+                    if (window.dartsScore >= 100) {
+                        setTimeout(() => winGame(game.reward), 1000);
+                    } else if (window.dartsThrows >= 5 && window.dartsScore < 100) {
+                        document.getElementById('dartsResult').innerHTML = 'Game Over! Need 100+ points.';
+                        document.getElementById('dartsResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🎯 Darts Challenge</h3>
+                    <div class="text-6xl mb-6">🎯</div>
+                    <div class="mb-4">Score: <span id="dartsStats" class="text-yellow-400 font-bold">0 (0 throws)</span></div>
+                    <button onclick="throwDart()" class="bg-red-600 hover:bg-red-700 px-8 py-4 rounded-lg font-bold text-lg">THROW!</button>
+                    <div id="dartsResult" class="mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">Score 100+ points in 5 throws to win!</div>
+                </div>
+            `;
+        }
+
+        function createBaseballGame(game) {
+            setTimeout(() => {
+                window.baseballHits = 0;
+                window.baseballSwings = 0;
+                
+                window.swingBat = function() {
+                    window.baseballSwings++;
+                    const timing = Math.random();
+                    const success = timing > 0.4; // 60% hit rate
+                    
+                    if (success) {
+                        window.baseballHits++;
+                        const hitType = Math.random();
+                        let result = '';
+                        if (hitType > 0.8) {
+                            result = '⚾ HOME RUN! 🎉';
+                        } else if (hitType > 0.6) {
+                            result = '⚾ Triple hit!';
+                        } else if (hitType > 0.4) {
+                            result = '⚾ Double hit!';
+                        } else {
+                            result = '⚾ Single hit!';
+                        }
+                        document.getElementById('baseballResult').innerHTML = result;
+                        document.getElementById('baseballResult').className = 'text-green-400 text-xl font-bold mt-4';
+                    } else {
+                        document.getElementById('baseballResult').innerHTML = '😞 Strike!';
+                        document.getElementById('baseballResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                    
+                    document.getElementById('baseballStats').textContent = `${window.baseballHits}/${window.baseballSwings}`;
+                    
+                    if (window.baseballHits >= 4) {
+                        setTimeout(() => winGame(game.reward), 1000);
+                    } else if (window.baseballSwings >= 7 && window.baseballHits < 4) {
+                        document.getElementById('baseballResult').innerHTML = 'Game Over! Need 4/7 hits.';
+                        document.getElementById('baseballResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">⚾ Baseball Hit</h3>
+                    <div class="text-6xl mb-6">⚾</div>
+                    <div class="mb-4">Hits: <span id="baseballStats" class="text-yellow-400 font-bold">0/0</span></div>
+                    <button onclick="swingBat()" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg font-bold text-lg">SWING!</button>
+                    <div id="baseballResult" class="mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">Get 4 hits out of 7 swings to win!</div>
+                </div>
+            `;
+        }
+
+        function createPingPongGame(game) {
+            setTimeout(() => {
+                window.pingPongScore = 0;
+                window.pingPongHits = 0;
+                
+                window.hitPaddle = function() {
+                    window.pingPongHits++;
+                    const timing = Math.random();
+                    const success = timing > 0.25; // 75% success rate
+                    
+                    if (success) {
+                        window.pingPongScore++;
+                        document.getElementById('pingPongResult').innerHTML = '🏓 Good return!';
+                        document.getElementById('pingPongResult').className = 'text-green-400 text-xl font-bold mt-4';
+                    } else {
+                        document.getElementById('pingPongResult').innerHTML = '😞 Missed!';
+                        document.getElementById('pingPongResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                    
+                    document.getElementById('pingPongStats').textContent = `${window.pingPongScore}/${window.pingPongHits}`;
+                    
+                    if (window.pingPongScore >= 8) {
+                        setTimeout(() => winGame(game.reward), 1000);
+                    } else if (window.pingPongHits >= 12 && window.pingPongScore < 8) {
+                        document.getElementById('pingPongResult').innerHTML = 'Game Over! Need 8/12 hits.';
+                        document.getElementById('pingPongResult').className = 'text-red-400 text-xl font-bold mt-4';
+                    }
+                };
+            }, 100);
+            
+            return `
+                <div class="text-center">
+                    <h3 class="text-xl mb-4">🏓 Ping Pong</h3>
+                    <div class="text-6xl mb-6">🏓</div>
+                    <div class="mb-4">Returns: <span id="pingPongStats" class="text-yellow-400 font-bold">0/0</span></div>
+                    <button onclick="hitPaddle()" class="bg-orange-600 hover:bg-orange-700 px-8 py-4 rounded-lg font-bold text-lg">HIT!</button>
+                    <div id="pingPongResult" class="mt-4"></div>
+                    <div class="text-sm text-gray-400 mt-4">Return 8 out of 12 balls to win!</div>
+                </div>
+            `;
+        }
+
         // Placeholder functions for other game types (simplified for brevity)
         function createLogicGame(game) { return createPuzzleGame(game); }
         function createSequenceGame(game) { return createMemoryGame(game); }
@@ -2004,11 +2566,526 @@
         // Auto-save periodically (every 30 seconds)
         setInterval(saveProgress, 30000);
         
+        // Game Portals functions
+        function openGamePortals() {
+            document.getElementById('gamePortalsModal').classList.remove('hidden');
+            showPortalCategory('popular');
+        }
+
+        function closeGamePortals() {
+            document.getElementById('gamePortalsModal').classList.add('hidden');
+        }
+
+        function showPortalCategory(category) {
+            currentPortalCategory = category;
+            
+            // Clear search
+            document.getElementById('portalSearchInput').value = '';
+            filteredPortals = [...allPortals];
+            
+            // Update category buttons
+            document.querySelectorAll('.portal-category-btn').forEach(btn => {
+                btn.className = 'portal-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap';
+            });
+            event.target.className = 'portal-category-btn bg-purple-600 text-white px-4 py-2 rounded-lg whitespace-nowrap';
+            
+            displayPortalSites(category);
+        }
+
+        function displayPortalSites(category) {
+            const portalSitesContainer = document.getElementById('portalSites');
+            let sites;
+            
+            if (category === 'search') {
+                sites = filteredPortals;
+            } else {
+                sites = gamePortals[category];
+            }
+            
+            portalSitesContainer.innerHTML = sites.map(site => `
+                <div class="bg-gray-700 p-6 rounded-lg border border-gray-600 hover:border-purple-500 transition-all duration-300 hover:transform hover:scale-105">
+                    <div class="text-center mb-4">
+                        <div class="text-4xl mb-3">${site.icon}</div>
+                        <h3 class="font-bold text-lg text-purple-300 mb-2">${site.name}</h3>
+                        <p class="text-sm text-gray-400 mb-3 min-h-[40px]">${site.description}</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-yellow-400 text-sm">⭐ ${site.rating}</span>
+                            <span class="text-green-400 text-xs bg-green-900 px-2 py-1 rounded">FREE</span>
+                        </div>
+                        ${category === 'search' ? `<div class="text-xs text-gray-500 mb-2">📂 ${site.category}</div>` : ''}
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="visitSite('${site.url}', '${site.name}')" 
+                                class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded font-bold text-sm transition-colors">
+                            🌐 Visit Site
+                        </button>
+                        <button onclick="visitSite('${site.url}', '${site.name}', true)" 
+                                class="w-full bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded font-bold text-xs transition-colors">
+                            🔗 Open in New Tab
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Portal search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const portalSearchInput = document.getElementById('portalSearchInput');
+            if (portalSearchInput) {
+                portalSearchInput.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    
+                    if (searchTerm === '') {
+                        // Show current category
+                        displayPortalSites(currentPortalCategory);
+                        return;
+                    }
+                    
+                    // Filter portals
+                    filteredPortals = allPortals.filter(portal => 
+                        portal.name.toLowerCase().includes(searchTerm) ||
+                        portal.description.toLowerCase().includes(searchTerm) ||
+                        portal.category.toLowerCase().includes(searchTerm)
+                    );
+                    
+                    // Update category buttons to show search is active
+                    document.querySelectorAll('.portal-category-btn').forEach(btn => {
+                        btn.className = 'portal-category-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap';
+                    });
+                    
+                    displayPortalSites('search');
+                });
+            }
+        });
+
+        function visitSite(url, siteName, newTab = false) {
+            // Award H currency for visiting external sites
+            const visitReward = 5;
+            currency += visitReward;
+            updateStats();
+            
+            showNotification(`🌐 +${visitReward} H for visiting ${siteName}!`, 'success');
+            
+            // Open the site
+            if (newTab) {
+                window.open(url, '_blank', 'noopener,noreferrer');
+            } else {
+                window.location.href = url;
+            }
+        }
+
+        // Multiplayer functions
+        function openMultiplayer() {
+            document.getElementById('multiplayerModal').classList.remove('hidden');
+            updateMultiplayerStats();
+            showMultiplayerMode('quickmatch');
+        }
+
+        function closeMultiplayer() {
+            document.getElementById('multiplayerModal').classList.add('hidden');
+        }
+
+        function updateMultiplayerStats() {
+            document.getElementById('multiplayerWins').textContent = multiplayerStats.wins;
+            document.getElementById('multiplayerLosses').textContent = multiplayerStats.losses;
+            document.getElementById('multiplayerRank').textContent = multiplayerStats.rank;
+            
+            // Update rank based on wins
+            if (multiplayerStats.wins >= 100) multiplayerStats.rank = 'Diamond';
+            else if (multiplayerStats.wins >= 50) multiplayerStats.rank = 'Platinum';
+            else if (multiplayerStats.wins >= 25) multiplayerStats.rank = 'Gold';
+            else if (multiplayerStats.wins >= 10) multiplayerStats.rank = 'Silver';
+            else multiplayerStats.rank = 'Bronze';
+        }
+
+        function showMultiplayerMode(mode) {
+            multiplayerStats.currentMode = mode;
+            
+            // Update mode buttons
+            document.querySelectorAll('.multiplayer-mode-btn').forEach(btn => {
+                btn.className = 'multiplayer-mode-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg whitespace-nowrap';
+            });
+            event.target.className = 'multiplayer-mode-btn bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap';
+            
+            const content = document.getElementById('multiplayerContent');
+            
+            switch(mode) {
+                case 'quickmatch':
+                    content.innerHTML = createQuickMatchContent();
+                    break;
+                case 'ranked':
+                    content.innerHTML = createRankedContent();
+                    break;
+                case 'custom':
+                    content.innerHTML = createCustomRoomContent();
+                    break;
+                case 'tournament':
+                    content.innerHTML = createTournamentContent();
+                    break;
+            }
+        }
+
+        function createQuickMatchContent() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-red-400 mb-4">⚡ Quick Match</h3>
+                        <p class="text-gray-300 mb-4">Jump into a game instantly with players of similar skill level!</p>
+                        <div class="flex space-x-4">
+                            <button onclick="findQuickMatch()" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg font-bold text-lg">
+                                🎮 Find Match
+                            </button>
+                            <div class="text-sm text-gray-400 flex items-center">
+                                <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                                ${Math.floor(Math.random() * 50) + 20} players online
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        ${multiplayerGames.slice(0, 8).map(game => `
+                            <div class="bg-gray-700 p-4 rounded-lg border border-gray-600 hover:border-red-500 transition-all cursor-pointer" onclick="joinQuickGame('${game.id}')">
+                                <div class="text-center">
+                                    <div class="text-3xl mb-2">${game.icon}</div>
+                                    <h4 class="font-bold text-sm mb-1">${game.name}</h4>
+                                    <div class="text-xs text-gray-400 mb-2">${game.category}</div>
+                                    <div class="text-xs text-green-400">${game.players} players • ${game.duration}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createRankedContent() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-400 mb-4">🏆 Ranked Matches</h3>
+                        <p class="text-gray-300 mb-4">Compete in ranked games to climb the leaderboard and earn exclusive rewards!</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div class="bg-gray-800 p-3 rounded text-center">
+                                <div class="text-2xl mb-1">🥉</div>
+                                <div class="text-sm text-gray-400">Current Rank</div>
+                                <div class="font-bold text-yellow-400">${multiplayerStats.rank}</div>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded text-center">
+                                <div class="text-2xl mb-1">⭐</div>
+                                <div class="text-sm text-gray-400">Rank Points</div>
+                                <div class="font-bold text-blue-400">${multiplayerStats.wins * 25}</div>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded text-center">
+                                <div class="text-2xl mb-1">📊</div>
+                                <div class="text-sm text-gray-400">Win Rate</div>
+                                <div class="font-bold text-green-400">${multiplayerStats.wins + multiplayerStats.losses > 0 ? Math.round((multiplayerStats.wins / (multiplayerStats.wins + multiplayerStats.losses)) * 100) : 0}%</div>
+                            </div>
+                        </div>
+                        <button onclick="findRankedMatch()" class="bg-yellow-600 hover:bg-yellow-700 px-6 py-3 rounded-lg font-bold">
+                            🏆 Find Ranked Match
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        ${multiplayerGames.filter(game => game.category === 'strategy' || game.category === 'puzzle').map(game => `
+                            <div class="bg-gray-700 p-4 rounded-lg border border-gray-600 hover:border-yellow-500 transition-all cursor-pointer" onclick="joinRankedGame('${game.id}')">
+                                <div class="text-center">
+                                    <div class="text-3xl mb-2">${game.icon}</div>
+                                    <h4 class="font-bold text-sm mb-1">${game.name}</h4>
+                                    <div class="text-xs text-gray-400 mb-2">${game.category}</div>
+                                    <div class="text-xs text-yellow-400">Ranked • ${game.duration}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createCustomRoomContent() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-purple-400 mb-4">🎮 Custom Rooms</h3>
+                        <p class="text-gray-300 mb-4">Create or join custom game rooms with friends!</p>
+                        <div class="flex space-x-4 mb-4">
+                            <button onclick="createCustomRoom()" class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-bold">
+                                ➕ Create Room
+                            </button>
+                            <input type="text" placeholder="Enter room code..." class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white" id="roomCodeInput">
+                            <button onclick="joinCustomRoom()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold">
+                                🚪 Join Room
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h4 class="text-lg font-bold mb-4">🌐 Public Rooms</h4>
+                        <div class="space-y-3">
+                            ${Array.from({length: 5}, (_, i) => {
+                                const game = multiplayerGames[Math.floor(Math.random() * multiplayerGames.length)];
+                                const host = onlinePlayers[Math.floor(Math.random() * onlinePlayers.length)];
+                                const players = Math.floor(Math.random() * 6) + 2;
+                                return `
+                                    <div class="bg-gray-800 p-3 rounded-lg flex justify-between items-center">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="text-2xl">${game.icon}</div>
+                                            <div>
+                                                <div class="font-bold">${game.name}</div>
+                                                <div class="text-sm text-gray-400">Host: ${host.name} • ${players}/8 players</div>
+                                            </div>
+                                        </div>
+                                        <button onclick="joinPublicRoom('${game.id}')" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-bold text-sm">
+                                            Join
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createTournamentContent() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-orange-400 mb-4">🏅 Tournaments</h3>
+                        <p class="text-gray-300 mb-4">Compete in tournaments for big prizes and glory!</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gradient-to-br from-yellow-600 to-orange-600 p-6 rounded-lg">
+                            <div class="text-center text-white">
+                                <div class="text-4xl mb-2">🏆</div>
+                                <h4 class="text-xl font-bold mb-2">Weekly Championship</h4>
+                                <div class="text-sm mb-4">Mixed Games Tournament</div>
+                                <div class="bg-black bg-opacity-30 p-3 rounded mb-4">
+                                    <div class="text-2xl font-bold">1,000 H</div>
+                                    <div class="text-sm">Prize Pool</div>
+                                </div>
+                                <div class="text-sm mb-4">
+                                    📅 Starts in: 2 days 14 hours<br>
+                                    👥 ${Math.floor(Math.random() * 200) + 50} registered
+                                </div>
+                                <button onclick="registerTournament('weekly')" class="bg-white text-orange-600 px-6 py-2 rounded-lg font-bold hover:bg-gray-100">
+                                    Register Now
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-purple-600 to-pink-600 p-6 rounded-lg">
+                            <div class="text-center text-white">
+                                <div class="text-4xl mb-2">⚡</div>
+                                <h4 class="text-xl font-bold mb-2">Speed Tournament</h4>
+                                <div class="text-sm mb-4">Quick Reflex Games</div>
+                                <div class="bg-black bg-opacity-30 p-3 rounded mb-4">
+                                    <div class="text-2xl font-bold">500 H</div>
+                                    <div class="text-sm">Prize Pool</div>
+                                </div>
+                                <div class="text-sm mb-4">
+                                    📅 Starts in: 6 hours<br>
+                                    👥 ${Math.floor(Math.random() * 100) + 20} registered
+                                </div>
+                                <button onclick="registerTournament('speed')" class="bg-white text-purple-600 px-6 py-2 rounded-lg font-bold hover:bg-gray-100">
+                                    Register Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h4 class="text-lg font-bold mb-4">🎯 Daily Challenges</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${multiplayerGames.slice(0, 3).map(game => `
+                                <div class="bg-gray-800 p-4 rounded-lg text-center">
+                                    <div class="text-3xl mb-2">${game.icon}</div>
+                                    <h5 class="font-bold mb-1">${game.name} Challenge</h5>
+                                    <div class="text-sm text-gray-400 mb-3">Win 3 matches</div>
+                                    <div class="text-yellow-400 font-bold mb-3">+50 H Reward</div>
+                                    <button onclick="startDailyChallenge('${game.id}')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold text-sm w-full">
+                                        Start Challenge
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Multiplayer game functions
+        function findQuickMatch() {
+            showNotification('🔍 Finding players...', 'info');
+            
+            setTimeout(() => {
+                const randomGame = multiplayerGames[Math.floor(Math.random() * multiplayerGames.length)];
+                const opponent = onlinePlayers[Math.floor(Math.random() * onlinePlayers.length)];
+                startMultiplayerGame(randomGame, opponent);
+            }, 2000);
+        }
+
+        function findRankedMatch() {
+            showNotification('🏆 Finding ranked opponent...', 'info');
+            
+            setTimeout(() => {
+                const rankedGames = multiplayerGames.filter(game => game.category === 'strategy' || game.category === 'puzzle');
+                const randomGame = rankedGames[Math.floor(Math.random() * rankedGames.length)];
+                const opponent = onlinePlayers.filter(p => p.rank === multiplayerStats.rank)[0] || onlinePlayers[0];
+                startMultiplayerGame(randomGame, opponent, true);
+            }, 3000);
+        }
+
+        function joinQuickGame(gameId) {
+            const game = multiplayerGames.find(g => g.id === gameId);
+            const opponent = onlinePlayers[Math.floor(Math.random() * onlinePlayers.length)];
+            showNotification(`🎮 Joining ${game.name}...`, 'info');
+            
+            setTimeout(() => {
+                startMultiplayerGame(game, opponent);
+            }, 1500);
+        }
+
+        function joinRankedGame(gameId) {
+            const game = multiplayerGames.find(g => g.id === gameId);
+            const opponent = onlinePlayers.filter(p => p.rank === multiplayerStats.rank)[0] || onlinePlayers[0];
+            showNotification(`🏆 Joining ranked ${game.name}...`, 'info');
+            
+            setTimeout(() => {
+                startMultiplayerGame(game, opponent, true);
+            }, 2000);
+        }
+
+        function startMultiplayerGame(game, opponent, isRanked = false) {
+            closeMultiplayer();
+            
+            // Create multiplayer game modal
+            const gameArea = document.getElementById('gameArea');
+            const modal = document.getElementById('gameModal');
+            
+            document.getElementById('modalGameTitle').textContent = `${game.name} ${isRanked ? '(Ranked)' : ''}`;
+            document.getElementById('gameReward').textContent = isRanked ? '50' : '25';
+            document.getElementById('gameDifficulty').textContent = isRanked ? 'Ranked' : 'Multiplayer';
+            
+            gameArea.innerHTML = `
+                <div class="text-center">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="bg-blue-600 p-4 rounded-lg">
+                            <div class="text-2xl mb-2">👤</div>
+                            <div class="font-bold">You</div>
+                            <div class="text-sm text-gray-300">${multiplayerStats.rank}</div>
+                        </div>
+                        <div class="text-4xl">VS</div>
+                        <div class="bg-red-600 p-4 rounded-lg">
+                            <div class="text-2xl mb-2">${opponent.avatar}</div>
+                            <div class="font-bold">${opponent.name}</div>
+                            <div class="text-sm text-gray-300">${opponent.rank}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-6xl mb-4">${game.icon}</div>
+                    <h3 class="text-2xl font-bold mb-4">${game.name}</h3>
+                    
+                    <div class="bg-gray-700 p-4 rounded-lg mb-6">
+                        <div class="text-lg font-bold mb-2">Game Starting...</div>
+                        <div class="w-full bg-gray-600 rounded-full h-2">
+                            <div class="bg-blue-600 h-2 rounded-full animate-pulse" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-400">
+                        ${isRanked ? '🏆 Ranked Match • +/- Rank Points' : '🎮 Casual Match • +H Currency'}
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            
+            // Simulate game
+            setTimeout(() => {
+                const playerWins = Math.random() > 0.4; // 60% win rate
+                finishMultiplayerGame(game, opponent, playerWins, isRanked);
+            }, 5000);
+        }
+
+        function finishMultiplayerGame(game, opponent, playerWins, isRanked) {
+            const gameArea = document.getElementById('gameArea');
+            
+            if (playerWins) {
+                multiplayerStats.wins++;
+                const reward = isRanked ? 50 : 25;
+                currency += reward;
+                
+                gameArea.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-6xl mb-4 pulse-animation">🎉</div>
+                        <h3 class="text-2xl font-bold text-green-400 mb-2">Victory!</h3>
+                        <div class="text-lg mb-4">You defeated ${opponent.name}!</div>
+                        <div class="text-yellow-400 font-bold text-xl mb-4">+${reward} H Earned!</div>
+                        ${isRanked ? '<div class="text-blue-400 mb-4">+25 Rank Points</div>' : ''}
+                        <button onclick="closeGameModal(); openMultiplayer();" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-bold mr-4">Play Again</button>
+                        <button onclick="closeGameModal()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold">Continue</button>
+                    </div>
+                `;
+            } else {
+                multiplayerStats.losses++;
+                
+                gameArea.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">😔</div>
+                        <h3 class="text-2xl font-bold text-red-400 mb-2">Defeat</h3>
+                        <div class="text-lg mb-4">${opponent.name} won this round!</div>
+                        <div class="text-gray-400 mb-4">Better luck next time!</div>
+                        ${isRanked ? '<div class="text-red-400 mb-4">-10 Rank Points</div>' : ''}
+                        <button onclick="closeGameModal(); openMultiplayer();" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg font-bold mr-4">Try Again</button>
+                        <button onclick="closeGameModal()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold">Continue</button>
+                    </div>
+                `;
+            }
+            
+            // Save multiplayer progress
+            localStorage.setItem('multiplayerWins', multiplayerStats.wins.toString());
+            localStorage.setItem('multiplayerLosses', multiplayerStats.losses.toString());
+            localStorage.setItem('multiplayerRank', multiplayerStats.rank);
+            
+            updateStats();
+            updateMultiplayerStats();
+        }
+
+        // Placeholder functions for other multiplayer features
+        function createCustomRoom() {
+            showNotification('🎮 Custom room created! Code: GAME' + Math.floor(Math.random() * 9999), 'success');
+        }
+
+        function joinCustomRoom() {
+            const code = document.getElementById('roomCodeInput').value;
+            if (code) {
+                showNotification(`🚪 Joining room ${code}...`, 'info');
+            } else {
+                showNotification('❌ Please enter a room code!', 'error');
+            }
+        }
+
+        function joinPublicRoom(gameId) {
+            const game = multiplayerGames.find(g => g.id === gameId);
+            showNotification(`🌐 Joining public ${game.name} room...`, 'info');
+        }
+
+        function registerTournament(type) {
+            showNotification(`🏅 Registered for ${type} tournament!`, 'success');
+        }
+
+        function startDailyChallenge(gameId) {
+            const game = multiplayerGames.find(g => g.id === gameId);
+            showNotification(`🎯 Starting ${game.name} daily challenge!`, 'info');
+        }
+
         // Initialize
         loadProgress();
         displayGames(allGames);
         updateStats();
         updateBoosterStatus();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96856df942252963',t:'MTc1NDA1MjI5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9685bc3214cdffa3',t:'MTc1NDA1NTQ5OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
