@@ -463,26 +463,26 @@
             wins: parseInt(localStorage.getItem('multiplayerWins') || '0'),
             losses: parseInt(localStorage.getItem('multiplayerLosses') || '0'),
             rank: localStorage.getItem('multiplayerRank') || 'Bronze',
-            currentMode: 'quickmatch'
+            currentMode: 'Quickmatch'
         };
 
         // Simulated online players
         const onlinePlayers = [
-            {name: 'SpeedGamer42', rank: 'Gold', status: 'In Game', avatar: '🎮'},
-            {name: 'PuzzleMaster', rank: 'Platinum', status: 'Online', avatar: '🧩'},
-            {name: 'QuickReflexes', rank: 'Silver', status: 'Online', avatar: '⚡'},
-            {name: 'WordWizard', rank: 'Gold', status: 'Waiting', avatar: '📝'},
-            {name: 'MathGenius', rank: 'Diamond', status: 'In Game', avatar: '🧮'},
-            {name: 'MemoryKing', rank: 'Bronze', status: 'Online', avatar: '🧠'},
-            {name: 'StrategyPro', rank: 'Platinum', status: 'Online', avatar: '♟️'},
-            {name: 'ColorMaster', rank: 'Silver', status: 'Waiting', avatar: '🌈'},
-            {name: 'ReactionTime', rank: 'Gold', status: 'Online', avatar: '⚡'},
-            {name: 'ArtistGamer', rank: 'Silver', status: 'In Game', avatar: '🎨'},
-            {name: 'NumberCruncher', rank: 'Bronze', status: 'Online', avatar: '🔢'},
-            {name: 'PatternSeeker', rank: 'Gold', status: 'Online', avatar: '🎯'},
-            {name: 'TypingSpeed', rank: 'Silver', status: 'Waiting', avatar: '⌨️'},
-            {name: 'TriviaChamp', rank: 'Platinum', status: 'Online', avatar: '❓'},
-            {name: 'EmojiExpert', rank: 'Bronze', status: 'Online', avatar: '😊'}
+            {name: 'Kabifaty', rank: 'Gold', status: 'In Game', avatar: '🎮'},
+            {name: 'Pose28', rank: 'Platinum', status: 'Online', avatar: '🧩'},
+            {name: 'Blink', rank: 'Silver', status: 'Online', avatar: '⚡'},
+            {name: 'Byebe98', rank: 'Gold', status: 'Waiting', avatar: '📝'},
+            {name: 'Mrsigma1184', rank: 'Diamond', status: 'In Game', avatar: '🧮'},
+            {name: 'Gon2', rank: 'Bronze', status: 'Online', avatar: '🧠'},
+            {name: 'MrOhioSigmaSkibidi', rank: 'Platinum', status: 'Online', avatar: '♟️'},
+            {name: 'Soxly', rank: 'Silver', status: 'Waiting', avatar: '🌈'},
+            {name: 'Megh', rank: 'Gold', status: 'Online', avatar: '⚡'},
+            {name: 'Halsh115', rank: 'Diamond', status: 'In Game', avatar: '🎨'},
+            {name: 'Fork', rank: 'Bronze', status: 'Online', avatar: '🔢'},
+            {name: 'N_gg_', rank: 'Gold', status: 'Online', avatar: '🎯'},
+            {name: 'Shitter', rank: 'Silver', status: 'Waiting', avatar: '⌨️'},
+            {name: 'Peepoo', rank: 'Platinum', status: 'Online', avatar: '❓'},
+            {name: 'Owner☑', rank: 'Owner', status: 'Online', avatar: '🔥'}
         ];
 
         // Game data and state
@@ -505,19 +505,19 @@
         // Shop items data
         const shopItems = {
             cosmetics: [
-                {id: 'theme_dark_blue', name: 'Dark Blue Theme', price: 150, icon: '🔵', description: 'Change your interface to a sleek dark blue theme'},
-                {id: 'theme_purple', name: 'Purple Galaxy Theme', price: 200, icon: '🟣', description: 'Transform your GameVault with a cosmic purple theme'},
-                {id: 'theme_green', name: 'Matrix Green Theme', price: 180, icon: '🟢', description: 'Enter the matrix with this retro green theme'},
-                {id: 'avatar_crown', name: 'Golden Crown Avatar', price: 300, icon: '👑', description: 'Show your royal status with a golden crown'},
-                {id: 'avatar_fire', name: 'Fire Avatar', price: 250, icon: '🔥', description: 'Burn bright with this fiery avatar effect'},
-                {id: 'avatar_star', name: 'Star Avatar', price: 220, icon: '⭐', description: 'Shine like a star with this celestial avatar'},
-                {id: 'border_gold', name: 'Gold Border', price: 400, icon: '🏆', description: 'Elegant gold border around your profile'},
-                {id: 'border_rainbow', name: 'Rainbow Border', price: 350, icon: '🌈', description: 'Colorful rainbow border that cycles through colors'}
+                {id: 'theme_dark_blue', name: 'Darkish-Blue Theme', price: 150, icon: '🔵', description: 'Change your interface to a sleek dark blue theme'},
+                {id: 'theme_purple', name: 'Purple-Galaxy Theme', price: 200, icon: '🟣', description: 'Transform your GameVault with a cosmic purple theme'},
+                {id: 'theme_green', name: 'Matrix-Green Theme', price: 180, icon: '🟢', description: 'Enter the matrix with this retro green theme'},
+                {id: 'avatar_crown', name: 'Golden-Crown Avatar', price: 300, icon: '👑', description: 'Show your royal status with a golden crown'},
+                {id: 'avatar_fire', name: 'Fire-Avatar', price: 250, icon: '🔥', description: 'Burn bright with this fiery avatar effect'},
+                {id: 'avatar_star', name: 'Star-Avatar', price: 220, icon: '⭐', description: 'Shine like a star with this celestial avatar'},
+                {id: 'border_gold', name: 'Gol-Border', price: 400, icon: '🏆', description: 'Elegant gold border around your profile'},
+                {id: 'border_rainbow', name: 'RainbowBorder', price: 350, icon: '🌈', description: 'Colorful rainbow border that cycles through colors'}
             ],
             boosters: [
                 {id: 'double_h_1hr', name: '2x H Booster (1 Hour)', price: 100, icon: '⚡', description: 'Double your H earnings for 1 hour'},
-                {id: 'double_h_24hr', name: '2x H Booster (24 Hours)', price: 800, icon: '⚡', description: 'Double your H earnings for 24 hours'},
-                {id: 'triple_h_30min', name: '3x H Booster (30 Minutes)', price: 200, icon: '🚀', description: 'Triple your H earnings for 30 minutes'},
+                {id: 'double_h_24hr', name: '5x H Booster (24 Hours)', price: 800, icon: '⚡', description: 'Double your H earnings for 24 hours'},
+                {id: 'triple_h_30min', name: '10x H Booster (30 Minutes)', price: 200, icon: '🚀', description: 'Triple your H earnings for 30 minutes'},
                 {id: 'luck_boost', name: 'Luck Booster', price: 150, icon: '🍀', description: 'Increase your chances of winning games by 20%'},
                 {id: 'streak_protect', name: 'Streak Protection', price: 250, icon: '🛡️', description: 'Protect your win streak from breaking once'},
                 {id: 'instant_win', name: 'Instant Win Token', price: 500, icon: '🎯', description: 'Instantly win any game (single use)'},
@@ -526,7 +526,7 @@
             ],
             titles: [
                 {id: 'title_legend', name: 'The Legend', price: 1000, icon: '🏆', description: 'Display "The Legend" as your title'},
-                {id: 'title_master', name: 'Game Master', price: 600, icon: '🎮', description: 'Show everyone you\'re a Game Master'},
+                {id: 'title_master', name: 'Game Master:OWNER', price: 1000000, icon: '🎮', description: 'Show everyone you\'re a Game Master'},
                 {id: 'title_speedster', name: 'Speed Demon', price: 400, icon: '💨', description: 'For the fastest players in GameVault'},
                 {id: 'title_collector', name: 'H Collector', price: 350, icon: '💰', description: 'Perfect for currency collectors'},
                 {id: 'title_champion', name: 'Champion', price: 500, icon: '🥇', description: 'Wear the Champion title with pride'},
@@ -877,7 +877,7 @@
                 {q: "144 ÷ 12 = ?", a: 12, opts: [12, 14, 10, 16]},
                 {q: "√81 = ?", a: 9, opts: [9, 7, 11, 8]},
                 {q: "25% of 200 = ?", a: 50, opts: [50, 40, 60, 45]}
-            ];
+		    ];
             
             setTimeout(() => {
                 const problem = problems[Math.floor(Math.random() * problems.length)];
